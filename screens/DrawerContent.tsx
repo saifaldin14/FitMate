@@ -2,7 +2,8 @@ import {
     DrawerContentScrollView,
     DrawerItem
 } from '@react-navigation/drawer';
-import React from 'react';
+import firebase from 'firebase';
+import React, { useEffect, useState } from 'react';
 import { StyleSheet, View } from 'react-native';
 import {
     Avatar,
@@ -14,13 +15,38 @@ import {
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import { AuthContext } from '../components/context';
 
-
-
 export function DrawerContent(props) {
-
     const paperTheme = useTheme();
-
     const { signOut, toggleTheme } = React.useContext(AuthContext);
+    const [userData, setUserData] = useState({
+        firstName: "",
+        lastName: "",
+        age: "",
+        weight: "",
+        email: "",
+    });
+    const [url, setUrl] = useState('https://api.adorable.io/avatars/80/abott@adorable.png');
+
+    useEffect(() => {
+        firebase.auth().onAuthStateChanged(async (user) => {
+            var ref = firebase.database().ref(user.email.replace('.', ''));
+            firebase.database().ref(ref).child("userData").once('value').then((snapshot) => {
+                //console.log(snapshot.val().firstName)
+                setUserData(userData => ({
+                    ...userData,
+                    firstName: snapshot.val().firstName,
+                    lastName: snapshot.val().lastName,
+                    age: snapshot.val().age,
+                    weight: snapshot.val().weight,
+                    email: user.email,
+                }));
+            });
+            const iRef = "/images/" + user.email.replace('.', '');
+            const imageRef = firebase.storage().ref(iRef);
+            const tempUrl = await imageRef.getDownloadURL();
+            setUrl(tempUrl);
+        })
+    }, []);
 
     return (
         <View style={{ flex: 1 }}>
@@ -30,13 +56,12 @@ export function DrawerContent(props) {
                         <View style={{ flexDirection: 'row', marginTop: 15 }}>
                             <Avatar.Image
                                 source={{
-                                    uri: 'https://api.adorable.io/avatars/50/abott@adorable.png'
+                                    uri: url
                                 }}
                                 size={50}
                             />
                             <View style={{ marginLeft: 15, flexDirection: 'column' }}>
-                                <Title style={styles.title}>John Doe</Title>
-                                <Caption style={styles.caption}>@j_doe</Caption>
+                                <Title style={styles.title}>{userData.firstName + " " + userData.lastName}</Title>
                             </View>
                         </View>
 

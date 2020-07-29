@@ -138,12 +138,10 @@ export default withFormik({
     weight: yup.string().max(4).required()
   }),
   handleSubmit: (values, { props }) => {
-    console.log(values);
     firebase.auth().onAuthStateChanged((user) => {
-      console.log(user);
       var ref = firebase.database().ref(user.email.replace('.', ''));
       var key = firebase.database().ref(ref).push().key;
-      firebase.database().ref(ref).child(key).set({
+      firebase.database().ref(ref).child("userData").set({
         firstName: values.firstName,
         lastName: values.lastName,
         weight: values.weight,

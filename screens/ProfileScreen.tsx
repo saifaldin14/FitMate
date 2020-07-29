@@ -1,14 +1,47 @@
-import React from 'react';
+import firebase from 'firebase';
+import React, { useEffect, useState } from 'react';
 import { SafeAreaView, StyleSheet, View } from 'react-native';
 import {
   Avatar,
   Caption,
   Text, Title,
-  TouchableRipple
+  TouchableRipple, useTheme
 } from 'react-native-paper';
-import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
+import FontAwesome from 'react-native-vector-icons/FontAwesome';
+import { default as Icon, default as MaterialCommunityIcons } from 'react-native-vector-icons/MaterialCommunityIcons';
 
 const ProfileScreen = () => {
+  const { colors } = useTheme();
+  const [userData, setUserData] = useState({
+    firstName: "",
+    lastName: "",
+    age: "",
+    weight: "",
+    email: "",
+  });
+  const [url, setUrl] = useState('https://api.adorable.io/avatars/80/abott@adorable.png');
+
+  useEffect(() => {
+    firebase.auth().onAuthStateChanged(async (user) => {
+      var ref = firebase.database().ref(user.email.replace('.', ''));
+      firebase.database().ref(ref).child("userData").once('value').then((snapshot) => {
+        //console.log(snapshot.val().firstName)
+        setUserData(userData => ({
+          ...userData,
+          firstName: snapshot.val().firstName,
+          lastName: snapshot.val().lastName,
+          age: snapshot.val().age,
+          weight: snapshot.val().weight,
+          email: user.email,
+        }));
+      });
+      const iRef = "/images/" + user.email.replace('.', '');
+      const imageRef = firebase.storage().ref(iRef);
+      const tempUrl = await imageRef.getDownloadURL();
+      setUrl(tempUrl);
+    })
+  }, []);
+
   return (
     <SafeAreaView style={styles.container}>
 
@@ -16,7 +49,7 @@ const ProfileScreen = () => {
         <View style={{ flexDirection: 'row', marginTop: 15 }}>
           <Avatar.Image
             source={{
-              uri: 'https://api.adorable.io/avatars/80/abott@adorable.png',
+              uri: url,
             }}
             size={80}
           />
@@ -24,24 +57,23 @@ const ProfileScreen = () => {
             <Title style={[styles.title, {
               marginTop: 15,
               marginBottom: 5,
-            }]}>John Doe</Title>
-            <Caption style={styles.caption}>@j_doe</Caption>
+            }]}>{userData.firstName + " " + userData.lastName}</Title>
           </View>
         </View>
       </View>
 
       <View style={styles.userInfoSection}>
         <View style={styles.row}>
-          <Icon name="map-marker-radius" color="#777777" size={20} />
-          <Text style={{ color: "#777777", marginLeft: 20 }}>Kolkata, India</Text>
+          <FontAwesome name="sun-o" color={colors.text} size={20} />
+          <Text style={{ color: "#777777", marginLeft: 20 }}>{userData.age + " years old"}</Text>
         </View>
         <View style={styles.row}>
-          <Icon name="phone" color="#777777" size={20} />
-          <Text style={{ color: "#777777", marginLeft: 20 }}>+91-900000009</Text>
+          <MaterialCommunityIcons name="scale-bathroom" color={colors.text} size={20} />
+          <Text style={{ color: "#777777", marginLeft: 20 }}>{userData.weight + " kg"}</Text>
         </View>
         <View style={styles.row}>
           <Icon name="email" color="#777777" size={20} />
-          <Text style={{ color: "#777777", marginLeft: 20 }}>john_doe@email.com</Text>
+          <Text style={{ color: "#777777", marginLeft: 20 }}>{userData.email}</Text>
         </View>
       </View>
 

@@ -1,4 +1,3 @@
-import { useTheme } from '@react-navigation/native';
 import * as firebase from 'firebase';
 import haversine from "haversine";
 import * as _ from 'lodash';
@@ -10,8 +9,7 @@ import {
   View
 } from 'react-native';
 import Modal from 'react-native-modal';
-//import { userNameInfo } from '../components/userInfo';
-import { AuthContext } from '../components/context';
+import { useTheme } from 'react-native-paper';
 import FloatingButton from '../components/FloatingButton';
 import { Map } from '../components/Map';
 import { ModalView } from '../components/ModalView';
@@ -23,9 +21,8 @@ const LATITUDE = 37.78825;
 const LONGITUDE = -122.4324;
 var email = "ttt";
 
-const RunMapScreen = ({ navigation, props }) => {
-  const { signIn } = React.useContext(AuthContext);
-
+const RunMapScreen = () => {
+  const paperTheme = useTheme();
   const [state, setState] = useState({
     isActive: false,
     close: true,

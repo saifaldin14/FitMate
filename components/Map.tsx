@@ -1,10 +1,19 @@
 import React, { memo } from 'react';
 import { Dimensions, StyleSheet } from 'react-native';
 import MapView, { Polyline } from "react-native-maps";
+import { useTheme } from 'react-native-paper';
 
 const { width, height } = Dimensions.get('window')
 
 export const Map = memo(props => {
+  const paperTheme = useTheme();
+
+  var mapTheme = 'standard';
+  if (paperTheme.dark === true) {
+    mapTheme = 'hybrid';
+  }
+  var backGroundColor = '#404040';
+
   return (
     <MapView
       provider="google"
@@ -13,6 +22,7 @@ export const Map = memo(props => {
       showsUserLocation={true}
       followUserLocation={true}
       region={props.getRegion}
+      tintColor='#404040'
       overlays={[{
         coordinates: props.routeCoordinates,
         strokeColor: '#F02A4B',
