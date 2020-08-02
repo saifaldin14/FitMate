@@ -2,5 +2,9 @@
   "devToolsPort": 19002,
   "expoServerPort": 19000,
   "packagerPort": 19001,
+<<<<<<< HEAD
   "packagerPid": 67989
+=======
+  "packagerPid": 31415
+>>>>>>> parent of 1e7eb16b... Updated package manager
 }
