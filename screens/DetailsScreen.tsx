@@ -1,37 +1,49 @@
-import * as mobilenet from '@tensorflow-models/mobilenet'
-import * as tf from '@tensorflow/tfjs'
-import { fetch } from '@tensorflow/tfjs-react-native'
-import Constants from 'expo-constants'
-import * as ImagePicker from 'expo-image-picker'
-import * as Permissions from 'expo-permissions'
-import * as jpeg from 'jpeg-js'
-import React from 'react'
+import { useTheme } from '@react-navigation/native';
+import * as mobilenet from '@tensorflow-models/mobilenet';
+import * as tf from '@tensorflow/tfjs';
+import { fetch } from '@tensorflow/tfjs-react-native';
+import Constants from 'expo-constants';
+import * as ImagePicker from 'expo-image-picker';
+import * as Permissions from 'expo-permissions';
+import * as jpeg from 'jpeg-js';
+import React, { useEffect, useState } from 'react';
 import {
   ActivityIndicator,
-  Alert, Image, StatusBar, StyleSheet,
+
+
+
+  Alert,
+  Button, Image, StatusBar, StyleSheet,
   Text,
+
+
+
+
   TouchableOpacity, View
-} from 'react-native'
+} from 'react-native';
 
-class DetailsScreen extends React.Component {
-  state = {
-    isTfReady: false,
-    isModelReady: false,
-    predictions: null,
-    image: null
-  }
+const DetailsScreen = ({ navigation }) => {
+  const { colors } = useTheme();
+  const [isTfReady, setIsTfReady] = useState(false);
+  const [isModelReady, setIsModelReady] = useState(false);
+  const [prediction, setPrediction] = useState(null);
+  const [image, setImage] = useState(null);
+  const [model, setModel] = useState(null);
 
-  async componentDidMount() {
+  useEffect(() => {
+    loadTf();
+  }, []);
+
+  const loadTf = async () => {
     await tf.ready()
-    this.setState({
-      isTfReady: true
-    })
-    this.model = await mobilenet.load()
-    this.setState({ isModelReady: true })
-    this.getPermissionAsync()
-  }
+    setIsTfReady(true);
+    const tempModel = await mobilenet.load()
+    setModel(tempModel);
+    setIsModelReady(true);
+    getPermissionAsync();
+  };
 
-  getPermissionAsync = async () => {
+  const getPermissionAsync = async () => {
     if (Constants.platform.ios) {
       const { status } = await Permissions.askAsync(Permissions.CAMERA_ROLL)
       if (status !== 'granted') {
@@ -40,7 +52,7 @@ class DetailsScreen extends React.Component {
     }
   }
 
-  imageToTensor(rawImageData) {
+  const imageToTensor = (rawImageData) => {
     const TO_UINT8ARRAY = true
     const { width, height, data } = jpeg.decode(rawImageData, TO_UINT8ARRAY)
     // Drop the alpha channel info for mobilenet
@@ -57,21 +69,21 @@ class DetailsScreen extends React.Component {
     return tf.tensor3d(buffer, [height, width, 3])
   }
 
-  classifyImage = async () => {
+  const classifyImage = async () => {
     try {
-      const imageAssetPath = Image.resolveAssetSource(this.state.image)
+      const imageAssetPath = Image.resolveAssetSource(image)
       const response = await fetch(imageAssetPath.uri, {}, { isBinary: true })
       const rawImageData = await response.arrayBuffer()
-      const imageTensor = this.imageToTensor(rawImageData)
-      const predictions = await this.model.classify(imageTensor)
-      this.setState({ predictions })
+      const imageTensor = imageToTensor(rawImageData)
+      const predictions = await model.classify(imageTensor)
+      setPrediction(predictions);
       console.log(predictions)
     } catch (error) {
       console.log(error)
     }
   }
 
-  selectImage = async () => {
+  const selectImage = async () => {
     try {
       let response = await ImagePicker.launchImageLibraryAsync({
         mediaTypes: ImagePicker.MediaTypeOptions.All,
@@ -81,69 +93,75 @@ class DetailsScreen extends React.Component {
 
       if (!response.cancelled) {
         const source = { uri: response.uri }
-        this.setState({ image: source })
-        this.classifyImage()
+        setImage(source);
+        classifyImage()
       }
     } catch (error) {
       console.log(error)
     }
   }
 
-  renderPrediction = prediction => {
+  const renderPrediction = prediction => {
     return (
       <Text key={prediction.className} style={styles.text}>
         {prediction.className}
       </Text>
     )
   }
+  return (
+    <View style={styles.container}>
+      <StatusBar barStyle='light-content' />
+      <Text style={{ color: colors.text }}>Details Screen</Text>
+      <Button
+        title="Go to details screen...again"
+        onPress={() => navigation.push("Details")}
+      />
+      <Button
+        title="Go to home"
+        onPress={() => navigation.navigate("Home")}
+      />
+      <Button
+        title="Go back"
+        onPress={() => navigation.goBack()}
+      />
+      <View style={styles.loadingContainer}>
+        <Text style={styles.text}>
+          TFJS ready? {isTfReady ? <Text>✅</Text> : ''}
+        </Text>
 
-  render() {
-    const { isTfReady, isModelReady, predictions, image } = this.state
-
-    return (
-      <View style={styles.container}>
-        <StatusBar barStyle='light-content' />
-        <View style={styles.loadingContainer}>
-          <Text style={styles.text}>
-            TFJS ready? {isTfReady ? <Text>✅</Text> : ''}
-          </Text>
-
-          <View style={styles.loadingModelContainer}>
-            <Text style={styles.text}>Model ready? </Text>
-            {isModelReady ? (
-              <Text style={styles.text}>✅</Text>
-            ) : (
-                <ActivityIndicator size='small' />
-              )}
-          </View>
-        </View>
-        <TouchableOpacity
-          style={styles.imageWrapper}
-          onPress={isModelReady ? this.selectImage : undefined}>
-          {image && <Image source={image} style={styles.imageContainer} />}
-
-          {isModelReady && !image && (
-            <Text style={styles.transparentText}>Tap to choose image</Text>
-          )}
-        </TouchableOpacity>
-        <View style={styles.predictionWrapper}>
-          {isModelReady && image && (
-            <Text style={styles.text}>
-              Predictions: {predictions ? '' : 'Predicting...'}
-            </Text>
-          )}
-          {isModelReady &&
-            predictions &&
-            predictions.map(p => this.renderPrediction(p))}
-        </View>
-        <View style={styles.footer}>
-          <Text style={styles.poweredBy}>Powered by:</Text>
-          {/*<Image source={require('./assets/tfjs.jpg')} style={styles.tfLogo} />*/}
+        <View style={styles.loadingModelContainer}>
+          <Text style={styles.text}>Model ready? </Text>
+          {isModelReady ? (
+            <Text style={styles.text}>✅</Text>
+          ) : (
+              <ActivityIndicator size='small' />
+            )}
         </View>
       </View>
-    )
-  }
-}
+      <TouchableOpacity
+        style={styles.imageWrapper}
+        onPress={isModelReady ? selectImage : undefined}>
+        {image && <Image source={image} style={styles.imageContainer} />}
+
+        {isModelReady && !image && (
+          <Text style={styles.transparentText}>Tap to choose image</Text>
+        )}
+      </TouchableOpacity>
+      <View style={styles.predictionWrapper}>
+        {isModelReady && image && (
+          <Text style={styles.text}>
+            Predictions: {prediction ? '' : 'Predicting...'}
+          </Text>
+        )}
+        {isModelReady &&
+          prediction &&
+          prediction.map(p => renderPrediction(p))}
+      </View>
+    </View>
+  );
+};
+
+export default DetailsScreen;
 
 const styles = StyleSheet.create({
   container: {
@@ -207,16 +225,4 @@ const styles = StyleSheet.create({
     width: 125,
     height: 70
   }
-})
-
-export default DetailsScreen;
-
-/*
-//import { useTheme } from '@react-navigation/native';
-
-
-//const { colors } = useTheme();
-
-
-//<Text style={{ color: colors.text }}>Details Screen</Text>
-*/
+});
