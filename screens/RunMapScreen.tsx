@@ -200,7 +200,7 @@ const RunMapScreen = ({ navigation }) => {
       })
       .catch(error => {
         const { code, message } = error;
-        console.log(code, message);
+        //console.log(code, message);
       });
   });
 
