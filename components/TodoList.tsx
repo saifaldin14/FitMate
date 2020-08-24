@@ -1,10 +1,14 @@
 import React, { useState, useEffect } from 'react';
 import { StyleSheet, Text, View, TouchableOpacity, Modal } from 'react-native';
-import colors from './Colors';
+import todoColors from './Colors';
 import TodoModal from './TodoModal';
 import { accessibilityProps } from 'react-native-paper/lib/typescript/src/components/MaterialCommunityIcon';
+import { useTheme } from '@react-navigation/native';
 
 const TodoList = ({ list, updateList }) => {
+  const { colors } = useTheme();
+  const theme = useTheme();
+
   const [showListVisible, setShowListVisible] = useState(false);
   const completedCount = list.todos.filter(todo => todo.completed).length;
   const remainingCount = list.todos.length - completedCount;
@@ -59,18 +63,18 @@ const styles = StyleSheet.create({
   listTitle: {
     fontSize: 24,
     fontWeight: '700',
-    color: colors.white,
+    color: todoColors.white,
     marginBottom: 18
   },
   count: {
     fontSize: 48,
     fontWeight: '200',
-    color: colors.white
+    color: todoColors.white
   },
   subtitle: {
     fontSize: 12,
     fontWeight: '700',
-    color: colors.white
+    color: todoColors.white
   }
 })
 export default TodoList;

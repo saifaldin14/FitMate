@@ -2,11 +2,12 @@ import { useTheme } from '@react-navigation/native';
 import React, { useEffect, useState } from 'react';
 import { StyleSheet, View, Text, TouchableOpacity, FlatList, Modal } from 'react-native';
 import ProfileForm from '../components/ProfileForm';
-import colors from '../components/Colors';
-import { AntDesign, MaterialIcons } from '@expo/vector-icons';
+import todoColors from '../components/Colors';
+import { AntDesign } from '@expo/vector-icons';
 import tempData from './tempData';
 import TodoList from '../components/TodoList';
 import AddListModal from '../components/AddListModal';
+import * as firebase from 'firebase';
 
 //To implement live workout visit:
 //https://pusher.com/tutorials/workout-tracker-react-native#creating-a-pusher-app
@@ -20,6 +21,10 @@ const HomeScreen = ({ props, route, navigation }) => {
   const toggleAddModal = () => {
     setAddTodoVisible(!addTodoVisible);
   }
+
+  useEffect(() => {
+
+  })
 
   const renderList = list => {
     return <TodoList list={list} updateList={updateList} />
@@ -53,15 +58,15 @@ const HomeScreen = ({ props, route, navigation }) => {
       </Modal>
       <View style={{ flexDirection: 'row' }}>
         <View style={styles.divider} />
-        <Text style={styles.title}>
+        <Text style={[styles.title, { color: colors.text }]}>
           Todo
-          <Text style={{ fontWeight: '300', color: colors.blue }}>Lists</Text>
+          <Text style={{ fontWeight: '300', color: colors.text }}>Lists</Text>
         </Text>
         <View style={styles.divider} />
       </View>
       <View style={{ marginVertical: 48 }}>
         <TouchableOpacity style={styles.addList} onPress={() => toggleAddModal()}>
-          <AntDesign name="plus" size={16} color={colors.blue} />
+          <AntDesign name="plus" size={16} color={colors.text} />
 
         </TouchableOpacity>
         <Text style={styles.add}>Add List</Text>
@@ -90,7 +95,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center'
   },
   divider: {
-    backgroundColor: colors.lightBlue,
+    backgroundColor: todoColors.lightBlue,
     height: 1,
     flex: 1,
     alignSelf: 'center'
@@ -98,19 +103,19 @@ const styles = StyleSheet.create({
   title: {
     fontSize: 38,
     fontWeight: "800",
-    color: colors.black,
+    //color: colors.text,
     paddingHorizontal: 64
   },
   addList: {
     borderWidth: 2,
-    borderColor: colors.lightBlue,
+    borderColor: todoColors.lightBlue,
     borderRadius: 4,
     padding: 16,
     alignItems: 'center',
     justifyContent: 'center'
   },
   add: {
-    color: colors.blue,
+    color: todoColors.blue,
     fontWeight: '600',
     fontSize: 14,
     marginTop: 8

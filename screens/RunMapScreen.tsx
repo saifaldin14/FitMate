@@ -13,6 +13,7 @@ import { useTheme } from 'react-native-paper';
 import FloatingButton from '../components/FloatingButton';
 import { Map } from '../components/Map';
 import { ModalView } from '../components/ModalView';
+import GetLocation from 'react-native-get-location'
 
 const { width, height } = Dimensions.get('window')
 const LATITUDE_DELTA = 0.007;
@@ -23,6 +24,7 @@ var email = "ttt";
 
 const RunMapScreen = () => {
   const paperTheme = useTheme();
+  //const [routeCoordinates, setRouteCoordinates] = useState([]);
   const [state, setState] = useState({
     isActive: false,
     close: true,
@@ -52,24 +54,25 @@ const RunMapScreen = () => {
       { enableHighAccuracy: true, timeout: 20000, maximumAge: 1000 }
     )*/
     this.watchID = navigator.geolocation.watchPosition((position) => {
-      const newLatLngs = { latitude: position.coords.latitude, longitude: position.coords.longitude }
-      const positionLatLngs = _.pick(position.coords, ['latitude', 'longitude']);
       //setInterval(() => { success(position) }, 1000);
 
-      handleUpdates(position.coords.latitude, position.coords.longitude, newLatLngs, positionLatLngs, position.coords.speed);
+      handleUpdates(position, position.coords.latitude, position.coords.longitude, position.coords.speed);
     });
 
     return () => {
-      navigator.geolocation.clearWatch(watchID);
+      navigator.geolocation.clearWatch(this.watchID);
     }
   }, [state]);
 
-  const handleUpdates = (lat, long, newLatLngs, positionLatLngs, speedVal) => {
+  const handleUpdates = (position, lat, long, speedVal) => {
+    const newLatLngs = { latitude: position.coords.latitude, longitude: position.coords.longitude }
+    const positionLatLngs = _.pick(position.coords, ['latitude', 'longitude']);
     setState(state => ({ ...state, latitude: lat, longitude: long }));
-
+    //setRouteCoordinates(routeCoordinates.concat(positionLatLngs))
     if (state.isActive) {
       setState(state => ({
-        ...state, routeCoordinates: state.routeCoordinates.concat(positionLatLngs),
+        ...state,
+        routeCoordinates: state.routeCoordinates.concat(positionLatLngs),
         distanceTravelled: state.distanceTravelled + calcDistance(newLatLngs),
         prevLatLng: newLatLngs,
         now: moment(),
@@ -124,6 +127,7 @@ const RunMapScreen = () => {
       });
     });
 
+    //setRouteCoordinates([]);
     setState(state => ({
       ...state,
       isActive: false,
@@ -175,12 +179,36 @@ const RunMapScreen = () => {
     setState(state => ({ ...state, isModalVisible: !state.isModalVisible }));
   };
 
+  useEffect(() => {
+    GetLocation.getCurrentPosition({
+      enableHighAccuracy: true,
+      timeout: 15000,
+    })
+      .then(pos => {
+        setState(state => ({ ...state, latitude: pos.latitude, longitude: pos.longitude }));
+      })
+      .catch(error => {
+        const { code, message } = error;
+        console.log(code, message);
+      });
+  });
+
   const getMapRegion = () => ({
     latitude: state.latitude,
     longitude: state.longitude,
     latitudeDelta: LATITUDE_DELTA,
     longitudeDelta: LONGITUDE_DELTA
   });
+  const getPos = () => {
+    navigator.geolocation.getCurrentPosition(
+      (pos) => {
+        setState(state => ({ ...state, latitude: pos.latitude, longitude: pos.longitude }));
+      },
+      (error) => Alert.alert(error.message),
+      { enableHighAccuracy: true, timeout: 20000, maximumAge: 1000 }
+    );
+    return [state.latitude, state.longitude];
+  }
 
   const { colors } = useTheme();
 

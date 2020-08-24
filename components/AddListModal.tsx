@@ -1,13 +1,16 @@
 import React, { useState, useEffect } from 'react';
 import { View, Text, StyleSheet, KeyboardAvoidingView, TouchableOpacity, TextInput } from 'react-native';
 import { AntDesign, MaterialIcons } from '@expo/vector-icons';
-import colors from '../components/Colors';
+import todoColors from '../components/Colors';
 import tempData from '../screens/tempData';
+import { useTheme } from '@react-navigation/native';
 
 const AddListModal = (props) => {
   const backgroundColors = ["#5CD859", "#24A6D9", "#595BD9", "#8022D9", "#D159D8", "#D85963", "#D88559"]
   const [name, setName] = useState("");
   const [color, setColor] = useState(backgroundColors[0]);
+
+  const { colors } = useTheme();
 
   const createTodo = () => {
     const list = { name, color };
@@ -27,18 +30,18 @@ const AddListModal = (props) => {
     })
   }
   return (
-    <KeyboardAvoidingView style={styles.container} behavior='padding'>
+    <KeyboardAvoidingView style={[styles.container, { backgroundColor: colors.background }]} behavior='padding'>
       <TouchableOpacity
         style={{ position: 'absolute', top: 64, right: 32 }}
         onPress={props.closeModal}>
-        <AntDesign name="close" size={24} color={colors.black} />
+        <AntDesign name="close" size={24} color={colors.text} />
       </TouchableOpacity>
 
       <View style={{ alignSelf: 'stretch', marginHorizontal: 32 }}>
-        <Text style={styles.title}>Create Todo List</Text>
+        <Text style={[styles.title, { color: colors.text }]}>Create Todo List</Text>
 
         <TextInput
-          style={styles.input}
+          style={[styles.input, { color: colors.text }]}
           placeholder="List name?"
           onChangeText={text => setName(text)}
         />
@@ -50,7 +53,7 @@ const AddListModal = (props) => {
         <TouchableOpacity
           style={[styles.create, { backgroundColor: color }]}
           onPress={createTodo}>
-          <Text style={{ color: colors.white, fontWeight: '600' }}>Create!</Text>
+          <Text style={{ color: todoColors.white, fontWeight: '600' }}>Create!</Text>
         </TouchableOpacity>
 
       </View>
@@ -69,13 +72,13 @@ const styles = StyleSheet.create({
   title: {
     fontSize: 28,
     fontWeight: '800',
-    color: colors.black,
+    color: todoColors.black,
     alignSelf: 'center',
     marginBottom: 16
   },
   input: {
     borderWidth: StyleSheet.hairlineWidth,
-    borderColor: colors.blue,
+    borderColor: todoColors.blue,
     borderRadius: 6,
     height: 50,
     marginTop: 8,

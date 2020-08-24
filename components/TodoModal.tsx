@@ -1,13 +1,16 @@
 import React, { useState, useEffect } from 'react';
 import { StyleSheet, Text, View, SafeAreaView, TouchableOpacity, KeyboardAvoidingView, TextInput, Keyboard } from 'react-native';
-import colors from './Colors';
+import todoColors from './Colors';
 import { AntDesign, Ionicons } from '@expo/vector-icons';
 import { FlatList } from 'react-native-gesture-handler';
+import { useTheme } from '@react-navigation/native';
 
 const TodoModal = ({ list, closeModal, updateList }) => {
   // const [name, setName] = useState(list.name);
   // const [color, setColor] = useState(list.color);
   // const [todos, setTodos] = useState(list.todos);
+  const { colors } = useTheme();
+  const theme = useTheme();
 
   const [newTodo, setNewTodo] = useState("");
 
@@ -33,7 +36,7 @@ const TodoModal = ({ list, closeModal, updateList }) => {
           <Ionicons
             name={todo.completed ? "ios-square" : "ios-square-outline"}
             size={24}
-            color={colors.gray}
+            color={todoColors.gray}
             style={{ width: 32 }}
           />
         </TouchableOpacity>
@@ -44,7 +47,7 @@ const TodoModal = ({ list, closeModal, updateList }) => {
             styles.todo,
             {
               textDecorationLine: todo.completed ? 'line-through' : 'none',
-              color: todo.completed ? colors.gray : colors.black
+              color: todo.completed ? todoColors.gray : colors.text
             }
           ]}>
           {todo.title}
@@ -55,18 +58,18 @@ const TodoModal = ({ list, closeModal, updateList }) => {
   const taskCount = list.todos.length;
   const completedCount = list.todos.filter(todo => todo.completed).length;
   return (
-    <KeyboardAvoidingView style={{ flex: 1 }} behavior="padding">
+    <KeyboardAvoidingView style={{ flex: 1, backgroundColor: colors.background }} behavior="padding">
       <SafeAreaView style={styles.container}>
         <TouchableOpacity
           style={{ position: 'absolute', top: 64, right: 32, zIndex: 10 }}
           onPress={closeModal}
         >
-          <AntDesign name="close" size={24} color={colors.black} />
+          <AntDesign name="close" size={24} color={colors.text} />
         </TouchableOpacity>
 
         <View style={[styles.section, styles.header, { borderBottomColor: list.color }]}>
           <View>
-            <Text style={styles.title}>{list.name}</Text>
+            <Text style={[styles.title, { color: colors.text }]}>{list.name}</Text>
             <Text style={styles.taskCount}>
               {completedCount} of {taskCount} tasks
           </Text>
@@ -87,7 +90,7 @@ const TodoModal = ({ list, closeModal, updateList }) => {
           style={[styles.section, styles.footer]}
         >
           <TextInput
-            style={[styles.input, { borderColor: list.color }]}
+            style={[styles.input, { borderColor: list.color, color: colors.text }]}
             onChangeText={text => setNewTodo(text)}
             value={newTodo}
           />
@@ -95,7 +98,7 @@ const TodoModal = ({ list, closeModal, updateList }) => {
             style={[styles.addTodo, { backgroundColor: list.color }]}
             onPress={() => addTodo()}
           >
-            <AntDesign name="plus" size={16} color={colors.white} />
+            <AntDesign name="plus" size={16} color={colors.text} />
           </TouchableOpacity>
         </View>
       </SafeAreaView>
@@ -120,12 +123,12 @@ const styles = StyleSheet.create({
   title: {
     fontSize: 30,
     fontWeight: '800',
-    color: colors.black
+    //color: colors.black
   },
   taskCount: {
     marginTop: 4,
     marginBottom: 16,
-    color: colors.gray,
+    color: todoColors.gray,
     fontWeight: '600'
   },
   footer: {
@@ -153,7 +156,7 @@ const styles = StyleSheet.create({
     alignItems: 'center'
   },
   todo: {
-    color: colors.black,
+    //color: colors.black,
     fontWeight: '700',
     fontSize: 16
   }
