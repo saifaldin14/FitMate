@@ -1,13 +1,12 @@
 import { useTheme } from '@react-navigation/native';
 import React, { useEffect, useState } from 'react';
-import { StyleSheet, View, Text, TouchableOpacity, FlatList, Modal } from 'react-native';
-import ProfileForm from '../components/ProfileForm';
+import { StyleSheet, View, Text, TouchableOpacity, FlatList, Modal, Alert, ActivityIndicator } from 'react-native';
 import todoColors from '../components/Colors';
 import { AntDesign } from '@expo/vector-icons';
 import tempData from './tempData';
 import TodoList from '../components/TodoList';
 import AddListModal from '../components/AddListModal';
-import * as firebase from 'firebase';
+import Fire from '../api/Fire';
 
 //To implement live workout visit:
 //https://pusher.com/tutorials/workout-tracker-react-native#creating-a-pusher-app
@@ -17,14 +16,32 @@ const HomeScreen = ({ props, route, navigation }) => {
 
   const theme = useTheme();
   const [addTodoVisible, setAddTodoVisible] = useState(false);
-  const [lists, setLists] = useState(tempData);
+  const [lists, setLists] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [user, setUser] = useState({});
+
   const toggleAddModal = () => {
     setAddTodoVisible(!addTodoVisible);
   }
 
   useEffect(() => {
+    let firebase = new Fire((error, user) => {
+      if (error) {
+        return Alert.alert("Uh oh, something went wrong!");
+      }
 
-  })
+      firebase.getLists(theLists => {
+        setLists(theLists);
+        setLoading(false);
+      })
+
+      setUser(user);
+    });
+
+    return () => {
+      firebase.detach();
+    }
+  }, [])
 
   const renderList = list => {
     return <TodoList list={list} updateList={updateList} />
@@ -40,12 +57,17 @@ const HomeScreen = ({ props, route, navigation }) => {
     }));
   };
 
-  useEffect(() => {
-  });
-
   const onDataUpdated = (data) => {
     //console.log(data);
     navigation.popToTop();
+  }
+
+  if (loading) {
+    return (
+      <View style={styles.container}>
+        <ActivityIndicator size="large" color={todoColors.blue} />
+      </View>
+    );
   }
   return (
     <View style={styles.container}>
@@ -56,6 +78,11 @@ const HomeScreen = ({ props, route, navigation }) => {
       >
         <AddListModal closeModal={() => toggleAddModal()} addList={addList} />
       </Modal>
+
+      <View>
+        <Text>User {user.uid}</Text>
+      </View>
+
       <View style={{ flexDirection: 'row' }}>
         <View style={styles.divider} />
         <Text style={[styles.title, { color: colors.text }]}>
@@ -75,7 +102,7 @@ const HomeScreen = ({ props, route, navigation }) => {
       <View style={{ height: 275, paddingLeft: 32 }}>
         <FlatList
           data={lists}
-          keyExtractor={item => item.name}
+          keyExtractor={item => item.id.toString()}
           horizontal={true}
           showsHorizontalScrollIndicator={false}
           renderItem={({ item }) => renderList(item)}

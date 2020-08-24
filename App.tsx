@@ -14,6 +14,11 @@ import RootStackScreen from './screens/RootStackScreen';
 import RunMapScreen from './screens/RunMapScreen';
 import SettingsScreen from './screens/SettingsScreen';
 import SupportScreen from './screens/SupportScreen';
+import { decode, encode } from 'base-64'
+
+const globalAny: any = global;
+if (!globalAny.btoa) { globalAny.btoa = encode }
+if (!globalAny.atob) { globalAny.atob = decode }
 
 const firebaseConfig = {
   apiKey: "AIzaSyDL_6h5isQQHhEYW3NX1Z4IB2oq0Yuk_kk",
