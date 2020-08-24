@@ -2,7 +2,6 @@ import React, { useState, useEffect } from 'react';
 import { View, Text, StyleSheet, KeyboardAvoidingView, TouchableOpacity, TextInput } from 'react-native';
 import { AntDesign, MaterialIcons } from '@expo/vector-icons';
 import todoColors from '../components/Colors';
-import tempData from '../screens/tempData';
 import { useTheme } from '@react-navigation/native';
 
 const AddListModal = (props) => {

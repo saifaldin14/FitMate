@@ -3,7 +3,6 @@ import React, { useEffect, useState } from 'react';
 import { StyleSheet, View, Text, TouchableOpacity, FlatList, Modal, Alert, ActivityIndicator } from 'react-native';
 import todoColors from '../components/Colors';
 import { AntDesign } from '@expo/vector-icons';
-import tempData from './tempData';
 import TodoList from '../components/TodoList';
 import AddListModal from '../components/AddListModal';
 import Fire from '../api/Fire';
@@ -48,13 +47,23 @@ const HomeScreen = ({ props, route, navigation }) => {
   };
 
   const addList = list => {
-    setLists([...lists, { ...list, id: lists.length + 1, todos: [] }])
+    let firebase = new Fire((error, user) => {
+      firebase.addList({
+        name: list.name,
+        color: list.color,
+        todos: []
+      });
+    });
+    // setLists([...lists, { ...list, id: lists.length + 1, todos: [] }])
   };
 
   const updateList = list => {
-    setLists(lists.map(item => {
-      return item.id === list.id ? list : item;
-    }));
+    let firebase = new Fire((error, user) => {
+      firebase.updateList(list);
+    });
+    // setLists(lists.map(item => {
+    //   return item.id === list.id ? list : item;
+    // }));
   };
 
   const onDataUpdated = (data) => {
@@ -78,11 +87,6 @@ const HomeScreen = ({ props, route, navigation }) => {
       >
         <AddListModal closeModal={() => toggleAddModal()} addList={addList} />
       </Modal>
-
-      <View>
-        <Text>User {user.uid}</Text>
-      </View>
-
       <View style={{ flexDirection: 'row' }}>
         <View style={styles.divider} />
         <Text style={[styles.title, { color: colors.text }]}>
