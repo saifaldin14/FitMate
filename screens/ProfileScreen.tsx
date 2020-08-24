@@ -8,7 +8,10 @@ import {
   TouchableRipple, useTheme
 } from 'react-native-paper';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
-import { default as Icon, default as MaterialCommunityIcons } from 'react-native-vector-icons/MaterialCommunityIcons';
+import {
+  default as Icon,
+  default as MaterialCommunityIcons
+} from 'react-native-vector-icons/MaterialCommunityIcons';
 
 const ProfileScreen = () => {
   const { colors } = useTheme();

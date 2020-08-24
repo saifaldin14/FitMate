@@ -1,8 +1,30 @@
 import React, { useEffect, useState } from 'react';
-import { View, StyleSheet } from 'react-native';
+import { View, StyleSheet, Alert } from 'react-native';
 import { useTheme } from '@react-navigation/native';
+import Fire from '../api/Fire';
 
 const DetailsScreen = ({ navigation }) => {
+  const { colors } = useTheme();
+  const [run, setRun] = useState([]);
+  const [loading, setLoading] = useState(true);
+  useEffect(() => {
+    let firebase = new Fire((error, user) => {
+      if (error) {
+        return Alert.alert("Uh oh, something went wrong!");
+      }
+
+      firebase.getRun(theRun => {
+        setRun(theRun);
+        setLoading(false);
+      })
+    });
+    console.log(run);
+
+    return () => {
+      firebase.detach();
+    }
+  }, [])
+
   return (
     <View style={styles.container}>
 
@@ -15,8 +37,8 @@ export default DetailsScreen;
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#171f24',
-    alignItems: 'center'
+    alignItems: 'center',
+    justifyContent: 'center'
   },
   loadingContainer: {
     marginTop: 80,

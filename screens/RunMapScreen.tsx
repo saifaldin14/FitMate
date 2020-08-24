@@ -14,6 +14,7 @@ import FloatingButton from '../components/FloatingButton';
 import { Map } from '../components/Map';
 import { ModalView } from '../components/ModalView';
 import GetLocation from 'react-native-get-location'
+import Fire from '../api/Fire';
 
 const { width, height } = Dimensions.get('window')
 const LATITUDE_DELTA = 0.007;
@@ -22,7 +23,7 @@ const LATITUDE = 37.78825;
 const LONGITUDE = -122.4324;
 var email = "ttt";
 
-const RunMapScreen = () => {
+const RunMapScreen = ({ navigation }) => {
   const paperTheme = useTheme();
   //const [routeCoordinates, setRouteCoordinates] = useState([]);
   const [state, setState] = useState({
@@ -115,17 +116,26 @@ const RunMapScreen = () => {
   }
 
   const saveData = () => {
-    firebase.auth().onAuthStateChanged((user) => {
-      var ref = firebase.database().ref(user.email.replace('.', ''));
-      var key = firebase.database().ref(ref).push().key;
-      firebase.database().ref(ref).child(key).set({
-        email: user.email,
+    let f = new Fire((error, user) => {
+      f.addRun({
         distance: state.distanceTravelled,
         time: state.timeElapsed,
         speed: state.speed,
         averageSpeed: state.averageSpeed
       });
     });
+
+    // firebase.auth().onAuthStateChanged((user) => {
+    //   var ref = firebase.database().ref(user.email.replace('.', ''));
+    //   var key = firebase.database().ref(ref).push().key;
+    //   firebase.database().ref(ref).child("workoutData").child(key).set({
+    //     email: user.email,
+    //     distance: state.distanceTravelled,
+    //     time: state.timeElapsed,
+    //     speed: state.speed,
+    //     averageSpeed: state.averageSpeed
+    //   });
+    // });
 
     //setRouteCoordinates([]);
     setState(state => ({
@@ -143,7 +153,8 @@ const RunMapScreen = () => {
       speed: 0,
       averageSpeed: 0,
     }));
-    navigator.geolocation.clearWatch(watchID);
+    navigator.geolocation.clearWatch(this.watchID);
+    navigation.navigate('Details');
     //setState(state => ({ ...state, isModalVisible: !state.isModalVisible }));
   }
 

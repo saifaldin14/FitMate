@@ -2,7 +2,6 @@ import React, { useState, useEffect } from 'react';
 import { StyleSheet, Text, View, TouchableOpacity, Modal } from 'react-native';
 import todoColors from './Colors';
 import TodoModal from './TodoModal';
-import { accessibilityProps } from 'react-native-paper/lib/typescript/src/components/MaterialCommunityIcon';
 import { useTheme } from '@react-navigation/native';
 
 const TodoList = ({ list, updateList }) => {

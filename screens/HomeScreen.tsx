@@ -17,7 +17,6 @@ const HomeScreen = ({ props, route, navigation }) => {
   const [addTodoVisible, setAddTodoVisible] = useState(false);
   const [lists, setLists] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [user, setUser] = useState({});
 
   const toggleAddModal = () => {
     setAddTodoVisible(!addTodoVisible);
@@ -33,14 +32,12 @@ const HomeScreen = ({ props, route, navigation }) => {
         setLists(theLists);
         setLoading(false);
       })
-
-      setUser(user);
     });
 
     return () => {
       firebase.detach();
     }
-  }, [])
+  }, []);
 
   const renderList = list => {
     return <TodoList list={list} updateList={updateList} />
