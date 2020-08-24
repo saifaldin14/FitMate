@@ -61,9 +61,6 @@ const HomeScreen = ({ props, route, navigation }) => {
     let firebase = new Fire((error, user) => {
       firebase.updateList(list);
     });
-    // setLists(lists.map(item => {
-    //   return item.id === list.id ? list : item;
-    // }));
   };
 
   const onDataUpdated = (data) => {
@@ -90,8 +87,8 @@ const HomeScreen = ({ props, route, navigation }) => {
       <View style={{ flexDirection: 'row' }}>
         <View style={styles.divider} />
         <Text style={[styles.title, { color: colors.text }]}>
-          Todo
-          <Text style={{ fontWeight: '300', color: colors.text }}>Lists</Text>
+          Workout
+          <Text style={{ fontWeight: '300', color: colors.text }}> Programs</Text>
         </Text>
         <View style={styles.divider} />
       </View>
@@ -100,7 +97,7 @@ const HomeScreen = ({ props, route, navigation }) => {
           <AntDesign name="plus" size={16} color={colors.text} />
 
         </TouchableOpacity>
-        <Text style={styles.add}>Add List</Text>
+        <Text style={styles.add}>Add New Program</Text>
       </View>
 
       <View style={{ height: 275, paddingLeft: 32 }}>

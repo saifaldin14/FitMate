@@ -37,7 +37,7 @@ const AddListModal = (props) => {
       </TouchableOpacity>
 
       <View style={{ alignSelf: 'stretch', marginHorizontal: 32 }}>
-        <Text style={[styles.title, { color: colors.text }]}>Create Todo List</Text>
+        <Text style={[styles.title, { color: colors.text }]}>Create New Workout Programt</Text>
 
         <TextInput
           style={[styles.input, { color: colors.text }]}
