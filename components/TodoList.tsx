@@ -75,5 +75,5 @@ const styles = StyleSheet.create({
     fontWeight: '700',
     color: todoColors.white
   }
-})
+});
 export default TodoList;
