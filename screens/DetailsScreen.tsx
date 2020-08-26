@@ -1,17 +1,18 @@
 import React, { useEffect, useState } from 'react';
-import { View, StyleSheet, Alert, ActivityIndicator, Text, ScrollView } from 'react-native';
+import { View, StyleSheet, Alert, ActivityIndicator, Text, ScrollView, FlatList } from 'react-native';
 import { useTheme } from '@react-navigation/native';
 import Fire from '../api/Fire';
 import todoColors from '../components/Colors';
-import { VictoryBar, VictoryChart, VictoryTheme } from "victory-native";
 import DistanceChart from '../components/DistanceChart';
 import AverageSpeedChart from '../components/AverageSpeedChart';
+import { Card, CardItem, Body } from 'native-base';
 
 const DetailsScreen = ({ navigation }) => {
   const { colors } = useTheme();
   const [run, setRun] = useState([]);
   const [loading, setLoading] = useState(true);
   const [distanceGraph, setDistanceGraph] = useState([]);
+  const [defDistanceGraph, setDefDistanceGraph] = useState([]);
   const [avgSpeedGraph, setAvgSpeedGraph] = useState([]);
 
   useEffect(() => {
@@ -26,6 +27,7 @@ const DetailsScreen = ({ navigation }) => {
         // });
         setRun(theRun);
         let distance = [];
+        let defaultDistance = [];
         let averageSpeed = [];
         var i;
         for (i = 0; i < theRun.length; i++) {
@@ -38,12 +40,19 @@ const DetailsScreen = ({ navigation }) => {
             key: i + 1,
             value: theRun[i].distance
           });
+
+          defaultDistance.push({
+            key: i + 1,
+            value: 0
+          });
+
           averageSpeed.push({
             x: i + 1,
             y: theRun[i].averageSpeed
           });
         }
         setDistanceGraph(distance);
+        setDefDistanceGraph(defaultDistance);
         setAvgSpeedGraph(averageSpeed);
 
         setLoading(false);
@@ -56,27 +65,20 @@ const DetailsScreen = ({ navigation }) => {
     }
   }, []);
 
-  const makeGraphData = theRun => {
-    let distance = [];
-    let averageSpeed = [];
-    var i;
-    for (i = 0; i < theRun.length; i++) {
-      var objDist = {};
-      var objAvgSpd = {};
-      objDist[i + 1] = theRun[i].distance;
-      objAvgSpd[i + 1] = theRun[i].averageSpeed;
-      //var obj = { i: theRun[i].distance };
-      distance.push({
-        key: i + 1,
-        value: theRun[i].distance
-      });
-      averageSpeed.push({
-        x: i + 1,
-        y: theRun[i].averageSpeed
-      });
-    }
-    setDistanceGraph(distance);
-    // console.log(distanceGraph);
+  const renderItem = data => {
+    return (
+      <View>
+        <Card>
+          <CardItem>
+            <Body>
+              <Text>{data.distance.toFixed(2)} km</Text>
+              <Text>{data.averageSpeed.toFixed(2)} km/h</Text>
+              <Text>{data.time}</Text>
+            </Body>
+          </CardItem>
+        </Card>
+      </View>
+    );
   };
 
   if (loading) {
@@ -90,8 +92,20 @@ const DetailsScreen = ({ navigation }) => {
   return (
     <ScrollView>
       <View style={styles.container}>
-        <DistanceChart distance={distanceGraph} />
+        <DistanceChart
+          defaultDistance={defDistanceGraph}
+          distance={distanceGraph}
+        />
         <AverageSpeedChart avgSpeed={avgSpeedGraph} />
+      </View>
+      <View style={{ height: 275, paddingLeft: 32 }}>
+        <FlatList
+          data={run}
+          keyExtractor={item => item.id.toString()}
+          showsHorizontalScrollIndicator={false}
+          renderItem={({ item }) => renderItem(item)}
+          keyboardShouldPersistTaps="always"
+        />
       </View>
     </ScrollView>
   );
