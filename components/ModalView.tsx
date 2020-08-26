@@ -1,11 +1,12 @@
 import React, { memo } from 'react';
 import { Button, Dimensions, StyleSheet, Text, View } from 'react-native';
-
+import { useTheme } from 'react-native-paper';
 const { width, height } = Dimensions.get('window')
 
 export const ModalView = memo(props => {
+  const { colors } = useTheme();
   return (
-    <View style={styles.bottomBar}>
+    <View style={[styles.bottomBar, { backgroundColor: colors.background }]}>
       <View style={styles.bottomBarGroup}>
         <Text style={styles.bottomBarContent}>DURATION</Text>
         <Text style={styles.bottomBarContent}>{props.timeElapsed}</Text>

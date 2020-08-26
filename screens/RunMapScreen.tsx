@@ -15,6 +15,7 @@ import { Map } from '../components/Map';
 import { ModalView } from '../components/ModalView';
 import GetLocation from 'react-native-get-location'
 import Fire from '../api/Fire';
+import { mapDarkStyle, mapStandardStyle } from '../model/mapData';
 
 const { width, height } = Dimensions.get('window')
 const LATITUDE_DELTA = 0.007;
@@ -210,17 +211,6 @@ const RunMapScreen = ({ navigation }) => {
     latitudeDelta: LATITUDE_DELTA,
     longitudeDelta: LONGITUDE_DELTA
   });
-  const getPos = () => {
-    navigator.geolocation.getCurrentPosition(
-      (pos) => {
-        setState(state => ({ ...state, latitude: pos.latitude, longitude: pos.longitude }));
-      },
-      (error) => Alert.alert(error.message),
-      { enableHighAccuracy: true, timeout: 20000, maximumAge: 1000 }
-    );
-    return [state.latitude, state.longitude];
-  }
-
   const { colors } = useTheme();
 
   const theme = useTheme();
@@ -249,7 +239,9 @@ const RunMapScreen = ({ navigation }) => {
         openIsActive={openIsActive}
         endRun={endRun}
         toggleModal={toggleModal}
-        style={{ bottom: 100 }} />
+        style={{ bottom: 100 }}
+        themeColors={colors}
+      />
     </View>
   );
 };

@@ -1,6 +1,7 @@
 import { AntDesign, MaterialIcons } from '@expo/vector-icons';
 import React from 'react';
 import { Animated, StyleSheet, TouchableWithoutFeedback, View } from 'react-native';
+import { useTheme } from 'react-native-paper';
 
 export default class FloatingButton extends React.Component {
   constructor(props) {
@@ -65,12 +66,11 @@ export default class FloatingButton extends React.Component {
       inputRange: [0, 0.5, 1],
       outputRange: [0, 0, 1]
     })
-
     return (
       <View style={[styles.container, this.props.style]}>
         <TouchableWithoutFeedback
           onPress={this.props.toggleModal}>
-          <Animated.View style={[styles.button, styles.secondary, heartStyle, opacity]}>
+          <Animated.View style={[styles.button, styles.secondary, heartStyle, opacity, { backgroundColor: this.props.themeColors.background }]}>
             <AntDesign name='hearto' size={20} color='#F02A4B' />
           </Animated.View>
         </TouchableWithoutFeedback>
@@ -79,7 +79,7 @@ export default class FloatingButton extends React.Component {
           <TouchableWithoutFeedback
             onPress={this.props.openIsActive}
             onPressOut={this.changePlay}>
-            <Animated.View style={[styles.button, styles.secondary, pinStyle, opacity]}>
+            <Animated.View style={[styles.button, styles.secondary, pinStyle, opacity, { backgroundColor: this.props.themeColors.background }]}>
               {/*<Entypo name='location-pin' size={20} color='#F02A4B' />*/}
               <MaterialIcons name="directions-run" size={20} color="#F02A4B" />
             </Animated.View>
@@ -90,7 +90,7 @@ export default class FloatingButton extends React.Component {
             onPress={this.props.openIsActive}
             onPressOut={this.changePlay}
             onLongPress={this.props.endRun}>
-            <Animated.View style={[styles.button, styles.secondary, pinStyle, opacity]}>
+            <Animated.View style={[styles.button, styles.secondary, pinStyle, opacity, { backgroundColor: this.props.themeColors.background }]}>
               {/*<Entypo name='location-pin' size={20} color='#F02A4B' />*/}
               <AntDesign name="pause" size={20} color="#F02A4B" />
             </Animated.View>
