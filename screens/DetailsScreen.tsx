@@ -6,6 +6,7 @@ import todoColors from '../components/Colors';
 import DistanceChart from '../components/DistanceChart';
 import AverageSpeedChart from '../components/AverageSpeedChart';
 import { Card, CardItem, Body } from 'native-base';
+import todoColor from '../components/Colors';
 
 const DetailsScreen = ({ navigation }) => {
   const { colors } = useTheme();
@@ -69,11 +70,11 @@ const DetailsScreen = ({ navigation }) => {
     return (
       <View>
         <Card>
-          <CardItem>
+          <CardItem style={{ backgroundColor: colors.background }}>
             <Body>
-              <Text>{data.distance.toFixed(2)} km</Text>
-              <Text>{data.averageSpeed.toFixed(2)} km/h</Text>
-              <Text>{data.time}</Text>
+              <Text style={[styles.text, { color: colors.text }]}>Distance: {data.distance.toFixed(2)} km</Text>
+              <Text style={[styles.text, { color: colors.text }]}>Average Speed: {data.averageSpeed.toFixed(2)} km/h</Text>
+              <Text style={[styles.text, { color: colors.text }]}>Time: {data.time}</Text>
             </Body>
           </CardItem>
         </Card>
@@ -98,7 +99,8 @@ const DetailsScreen = ({ navigation }) => {
         />
         <AverageSpeedChart avgSpeed={avgSpeedGraph} />
       </View>
-      <View style={{ height: 275, paddingLeft: 32 }}>
+      <View style={{ padding: 15 }}>
+        <Text style={[styles.textHeader, { color: colors.text }]}>Running History</Text>
         <FlatList
           data={run}
           keyExtractor={item => item.id.toString()}
@@ -119,60 +121,15 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center'
   },
-  loadingContainer: {
-    marginTop: 80,
-    justifyContent: 'center'
-  },
   text: {
-    color: '#ffffff',
-    fontSize: 16
+    fontSize: 16,
+    fontWeight: '300',
+    padding: 5
   },
-  loadingModelContainer: {
-    flexDirection: 'row',
-    marginTop: 10
-  },
-  imageWrapper: {
-    width: 280,
-    height: 280,
-    padding: 10,
-    borderColor: '#cf667f',
-    borderWidth: 5,
-    borderStyle: 'dashed',
-    marginTop: 40,
-    marginBottom: 10,
-    position: 'relative',
-    justifyContent: 'center',
-    alignItems: 'center'
-  },
-  imageContainer: {
-    width: 250,
-    height: 250,
-    position: 'absolute',
-    top: 10,
-    left: 10,
-    bottom: 10,
-    right: 10
-  },
-  predictionWrapper: {
-    height: 100,
-    width: '100%',
-    flexDirection: 'column',
-    alignItems: 'center'
-  },
-  transparentText: {
-    color: '#ffffff',
-    opacity: 0.7
-  },
-  footer: {
-    marginTop: 40
-  },
-  poweredBy: {
-    fontSize: 20,
-    color: '#e69e34',
-    marginBottom: 6
-  },
-  tfLogo: {
-    width: 125,
-    height: 70
+  textHeader: {
+    textAlign: 'center',
+    fontSize: 24,
+    fontWeight: '800',
+    paddingTop: 25
   }
 });
