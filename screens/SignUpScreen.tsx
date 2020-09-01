@@ -4,7 +4,7 @@ import {
     Platform,
     ScrollView,
     StatusBar, StyleSheet, Text,
-    TextInput, TouchableOpacity, View
+    TextInput, TouchableOpacity, View, Alert
 } from 'react-native';
 import * as Animatable from 'react-native-animatable';
 import Feather from 'react-native-vector-icons/Feather';
@@ -66,11 +66,13 @@ const SignUpScreen = ({ navigation }) => {
 
     const signUpHandle = (email, password) => {
         try {
-            firebase.auth().createUserWithEmailAndPassword(email, password);
-            navigation.navigate("SetUpAccount");
-            //navigation.goBack();
+            firebase.auth().createUserWithEmailAndPassword(email, password).then(() => {
+                navigation.navigate("SetUpAccount");
+            }).catch(() => {
+                Alert.alert('Invalid Sign Up, try again')
+            });
         } catch (error) {
-            console.log(error.toString());
+            Alert.alert('Invalid Sign Up, try again')
         }
     }
 
@@ -175,10 +177,10 @@ const SignUpScreen = ({ navigation }) => {
                     </View>
                     <View style={styles.button}>
                         <TouchableOpacity
-                            style={styles.signIn}
+                            style={[styles.signIn, { backgroundColor: '#009387' }]}
                             onPress={() => { signUpHandle(data.username, data.password) }}>
                             <Text style={[styles.textSign, {
-                                color: 'black'
+                                color: 'white'
                             }]}>Sign Up</Text>
                         </TouchableOpacity>
 

@@ -1,12 +1,13 @@
 import firebase from 'firebase';
 import React, { useEffect, useState } from 'react';
-import { SafeAreaView, StyleSheet, View } from 'react-native';
+import { SafeAreaView, StyleSheet, View, AsyncStorage, Alert, TouchableOpacity, ScrollView } from 'react-native';
 import {
   Avatar,
   Caption,
   Text, Title,
   TouchableRipple, useTheme
 } from 'react-native-paper';
+import ProfileFooter from '../components/ProfileFooter';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import {
   default as Icon,
@@ -23,6 +24,8 @@ const ProfileScreen = () => {
     email: "",
   });
   const [url, setUrl] = useState('https://api.adorable.io/avatars/80/abott@adorable.png');
+  const [note, setNote] = useState('');
+  const [notes, setNotes] = useState([]);
 
   useEffect(() => {
     firebase.auth().onAuthStateChanged(async (user) => {
@@ -44,6 +47,85 @@ const ProfileScreen = () => {
       setUrl(tempUrl);
     })
   }, []);
+
+  useEffect(async () => {
+    const temp_notes = await AsyncStorage.getItem('notes');
+    if (temp_notes && temp_notes.length > 0) {
+      setNotes(JSON.parse(temp_notes));
+    }
+  }, []);
+
+  const updateAsyncStorage = (send_notes) => {
+
+    return new Promise(async (resolve, reject) => {
+      try {
+        await AsyncStorage.removeItem('notes');
+        await AsyncStorage.setItem('notes', JSON.stringify(send_notes));
+        return resolve(true);
+      } catch (e) {
+        return reject(e);
+      }
+    });
+  };
+
+  const cloneNotes = () => {
+    return [...notes];
+  }
+
+  const addNote = async () => {
+    if (note.length <= 0)
+      return;
+    try {
+      const temp_notes = cloneNotes();
+      temp_notes.push(note);
+
+      await updateAsyncStorage(temp_notes);
+      setNotes(temp_notes);
+      setNote('');
+    } catch (e) {
+      Alert.alert(e);
+    }
+  }
+
+  const removeNote = (i) => {
+    Alert.alert(
+      "Remove Goal?",
+      "Have you accomplished your goal?",
+      [{
+        text: "Cancel",
+        onPress: () => { },
+        style: "cancel"
+      },
+      {
+        text: "OK",
+        onPress: () => removeNoteAux(i)
+      }], { cancelable: false });
+  }
+
+  const removeNoteAux = async (i) => {
+    try {
+      const temp_notes = cloneNotes();
+      temp_notes.splice(i, 1);
+
+      await updateAsyncStorage(temp_notes);
+      setNotes(temp_notes);
+    } catch (e) {
+      Alert.alert(e);
+    }
+  }
+
+  const renderNotes = () => {
+    return notes.map((n, i) => {
+      return (
+        <TouchableOpacity
+          key={i} style={[styles.note, { backgroundColor: colors.background }]}
+          onLongPress={() => removeNote(i)}
+        >
+          <Text style={styles.noteText}>{n}</Text>
+        </TouchableOpacity>
+      );
+    });
+  }
 
   return (
     <SafeAreaView style={styles.container}>
@@ -79,52 +161,17 @@ const ProfileScreen = () => {
           <Text style={{ color: "#777777", marginLeft: 20 }}>{userData.email}</Text>
         </View>
       </View>
+      <View style={styles.container}>
+        <Text style={styles.goalText}>Fitness Goals</Text>
+        <ScrollView style={[styles.scrollView, { backgroundColor: colors.background }]}>
+          {renderNotes()}
+        </ScrollView>
 
-      <View style={styles.infoBoxWrapper}>
-        <View style={[styles.infoBox, {
-          borderRightColor: '#dddddd',
-          borderRightWidth: 1
-        }]}>
-          <Title>$140</Title>
-          <Caption>Wallet</Caption>
-        </View>
-        <View style={styles.infoBox}>
-          <Title>12</Title>
-          <Caption>Orders</Caption>
-        </View>
-      </View>
-
-      <View style={styles.menuWrapper}>
-        <TouchableRipple onPress={() => { }}>
-          <View style={styles.menuItem}>
-            <Icon name="heart-outline" color="#FF6347" size={25} />
-            <Text style={styles.menuItemText}>Your Favorites</Text>
-          </View>
-        </TouchableRipple>
-        <TouchableRipple onPress={() => { }}>
-          <View style={styles.menuItem}>
-            <Icon name="credit-card" color="#FF6347" size={25} />
-            <Text style={styles.menuItemText}>Payment</Text>
-          </View>
-        </TouchableRipple>
-        <TouchableRipple onPress={() => { }}>
-          <View style={styles.menuItem}>
-            <Icon name="share-outline" color="#FF6347" size={25} />
-            <Text style={styles.menuItemText}>Tell Your Friends</Text>
-          </View>
-        </TouchableRipple>
-        <TouchableRipple onPress={() => { }}>
-          <View style={styles.menuItem}>
-            <Icon name="account-check-outline" color="#FF6347" size={25} />
-            <Text style={styles.menuItemText}>Support</Text>
-          </View>
-        </TouchableRipple>
-        <TouchableRipple onPress={() => { }}>
-          <View style={styles.menuItem}>
-            <Icon name="settings-outline" color="#FF6347" size={25} />
-            <Text style={styles.menuItemText}>Settings</Text>
-          </View>
-        </TouchableRipple>
+        <ProfileFooter
+          onChangeText={(note) => setNote(note)}
+          inputValue={note}
+          onNoteAdd={() => addNote()}
+        />
       </View>
     </SafeAreaView>
   );
@@ -144,41 +191,30 @@ const styles = StyleSheet.create({
     fontSize: 24,
     fontWeight: 'bold',
   },
-  caption: {
-    fontSize: 14,
-    lineHeight: 14,
-    fontWeight: '500',
-  },
   row: {
     flexDirection: 'row',
     marginBottom: 10,
   },
-  infoBoxWrapper: {
-    borderBottomColor: '#dddddd',
-    borderBottomWidth: 1,
-    borderTopColor: '#dddddd',
-    borderTopWidth: 1,
-    flexDirection: 'row',
-    height: 100,
+  scrollView: {
+    maxHeight: '82%',
+    marginBottom: 100,
   },
-  infoBox: {
-    width: '50%',
+  goalText: {
+    fontSize: 24,
+    fontWeight: 'bold',
+    textAlign: 'center'
+  },
+  note: {
+    margin: 20,
+    padding: 20,
     alignItems: 'center',
     justifyContent: 'center',
+    borderWidth: 2,
+    borderColor: '#ddd',
+    borderRadius: 10,
   },
-  menuWrapper: {
-    marginTop: 10,
-  },
-  menuItem: {
-    flexDirection: 'row',
-    paddingVertical: 15,
-    paddingHorizontal: 30,
-  },
-  menuItemText: {
-    color: '#777777',
-    marginLeft: 20,
-    fontWeight: '600',
-    fontSize: 16,
-    lineHeight: 26,
-  },
+  noteText: {
+    fontSize: 14,
+    padding: 20,
+  }
 });

@@ -227,11 +227,11 @@ const SignInScreen = ({ navigation }) => {
                 </TouchableOpacity> */}
                 <View style={styles.button}>
                     <TouchableOpacity
-                        style={styles.signIn}
+                        style={[styles.signIn, { backgroundColor: '#009387' }]}
                         onPress={() => { loginHandle(data.username, data.password) }}
                     >
                         <Text style={[styles.textSign, {
-                            color: 'black'
+                            color: 'white'
                         }]}>Sign In</Text>
                     </TouchableOpacity>
 

@@ -7,13 +7,10 @@ import { ActivityIndicator, View } from 'react-native';
 import { DarkTheme as PaperDarkTheme, DefaultTheme as PaperDefaultTheme, Provider as PaperProvider } from 'react-native-paper';
 import { AuthContext } from './components/context';
 //import firebaseConfig from './components/firebaseConfig';
-import BookmarkScreen from './screens/BookmarkScreen';
 import { DrawerContent } from './screens/DrawerContent';
 import MainTabScreen from './screens/MainTabScreen';
 import RootStackScreen from './screens/RootStackScreen';
 import RunMapScreen from './screens/RunMapScreen';
-import SettingsScreen from './screens/SettingsScreen';
-import SupportScreen from './screens/SupportScreen';
 import { decode, encode } from 'base-64'
 
 const globalAny: any = global;
@@ -171,9 +168,6 @@ const App = () => {
           {loginState.userToken !== null ? (
             <Drawer.Navigator drawerContent={props => <DrawerContent {...props} />}>
               <Drawer.Screen name="HomeDrawer" component={MainTabScreen} />
-              <Drawer.Screen name="SupportScreen" component={SupportScreen} />
-              <Drawer.Screen name="SettingsScreen" component={SettingsScreen} />
-              <Drawer.Screen name="BookmarkScreen" component={BookmarkScreen} />
               <Drawer.Screen name="RunMapScreen" component={RunMapScreen} />
             </Drawer.Navigator>
           )
