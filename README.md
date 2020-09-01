@@ -34,6 +34,11 @@ React Native Fitness App to track run, workout and calorie data
 </div>
 
 <div style="display: flex; flex-direction: row;">
+    <img src="./media/10a.png" width="40%">
+    <img src="./media/10b.png" width="40%">
+</div>
+
+<div style="display: flex; flex-direction: row;">
     <img src="./media/6a.png" width="40%">
     <img src="./media/6b.png" width="40%">
 </div>
@@ -51,9 +56,4 @@ React Native Fitness App to track run, workout and calorie data
 <div style="display: flex; flex-direction: row;">
     <img src="./media/9a.png" width="40%">
     <img src="./media/9b.png" width="40%">
-</div>
-
-<div style="display: flex; flex-direction: row;">
-    <img src="./media/10a.png" width="40%">
-    <img src="./media/10b.png" width="40%">
 </div>
