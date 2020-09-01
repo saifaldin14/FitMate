@@ -46,3 +46,12 @@ Home Page
     <img src="./media/9a.png" width="40%">
     <img src="./media/9b.png" width="40%">
 </div>
+
+<div style="display: flex; flex-direction: row;">
+    <img src="./media/10a.png" width="40%">
+    <img src="./media/10b.png" width="40%">
+</div>
+
+<img src="./media/splash.png" width="60%">
+<img src="./media/login.png" width="60%">
+<img src="./media/signup.png" width="60%">
