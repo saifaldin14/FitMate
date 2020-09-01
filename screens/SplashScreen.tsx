@@ -8,6 +8,7 @@ import {
 } from 'react-native';
 import * as Animatable from 'react-native-animatable';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
+import Animated from 'react-native-reanimated';
 
 const SplashScreen = ({ navigation }) => {
     const { colors } = useTheme();
@@ -23,6 +24,12 @@ const SplashScreen = ({ navigation }) => {
                     style={styles.logo}
                     resizeMode="stretch"
                 />
+                <Animatable.Text
+                    animation="bounceIn"
+                    style={[styles.title, { color: 'white' }]}
+                >
+                    MyHeart
+                </Animatable.Text>
             </View>
             <Animatable.View
                 style={[styles.footer, {
@@ -32,16 +39,15 @@ const SplashScreen = ({ navigation }) => {
             >
                 <Text style={[styles.title, {
                     color: colors.text
-                }]}>Stay connected with everyone!</Text>
-                <Text style={[styles.text, { color: colors.text }]}>Sign in with account</Text>
+                }]}>Your Handy Fitness Pal!</Text>
                 <View style={styles.button}>
                     <TouchableOpacity onPress={() => navigation.navigate('SignInScreen')}>
                         <Text style={styles.textSign}>Get Started</Text>
-                        <MaterialIcons
+                        {/* <MaterialIcons
                             name="navigate-next"
                             color="#fff"
                             size={20}
-                        />
+                        /> */}
                     </TouchableOpacity>
                 </View>
             </Animatable.View>
@@ -52,7 +58,7 @@ const SplashScreen = ({ navigation }) => {
 export default SplashScreen;
 
 const { height } = Dimensions.get("screen");
-const height_logo = height * 0.28;
+const height_logo = height * 0.35;
 
 const styles = StyleSheet.create({
     container: {
@@ -86,19 +92,18 @@ const styles = StyleSheet.create({
         marginTop: 5
     },
     button: {
-        alignItems: 'flex-end',
-        marginTop: 30
-    },
-    signIn: {
-        width: 150,
-        height: 40,
+        backgroundColor: '#009387',
+        width: '100%',
+        height: 50,
         justifyContent: 'center',
         alignItems: 'center',
-        borderRadius: 50,
-        flexDirection: 'row'
+        borderRadius: 10,
+        marginTop: 60
     },
     textSign: {
-        color: 'black',
+        fontSize: 24,
+        color: 'white',
+        textAlign: 'center',
         fontWeight: 'bold'
     }
 });
