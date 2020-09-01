@@ -1,6 +1,7 @@
 # MyHeart
 React Native Fitness App to track run, workout and calorie data
 
+<img src="./media/1a.png" width="40%">
 ![test](media/1a.png) ![test](media/1b.png)
 
 ![test](media/2a.png) ![test](media/2b.png)
