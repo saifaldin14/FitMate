@@ -1,7 +1,13 @@
 # MyHeart
 React Native Fitness App to track run, workout and calorie data
 
-Home Page
+<img src="./media/splash.png" width="40%">
+
+<div style="display: flex; flex-direction: row;">
+    <img src="./media/login.png" width="40%">
+    <img src="./media/signup.png" width="40%">
+</div>
+
 <div style="display: flex; flex-direction: row;">
     <img src="./media/1a.png" width="40%">
     <img src="./media/1b.png" width="40%">
@@ -51,7 +57,3 @@ Home Page
     <img src="./media/10a.png" width="40%">
     <img src="./media/10b.png" width="40%">
 </div>
-
-<img src="./media/splash.png" width="60%">
-<img src="./media/login.png" width="60%">
-<img src="./media/signup.png" width="60%">
