@@ -69,17 +69,31 @@ const SignInScreen = ({ navigation }) => {
     }
 
     const handleValidUser = (val) => {
-        if (val.trim().length >= 4) {
+        let reg = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
+        if (reg.test(val)) {
+            //Correct email
             setData({
                 ...data,
                 isValidUser: true
             });
         } else {
+            //Invalid email
             setData({
                 ...data,
                 isValidUser: false
             });
         }
+        // if (val.trim().length >= 4) {
+        //     setData({
+        //         ...data,
+        //         isValidUser: true
+        //     });
+        // } else {
+        //     setData({
+        //         ...data,
+        //         isValidUser: false
+        //     });
+        // }
     }
 
     const loginHandle = (userName, password) => {
@@ -88,23 +102,22 @@ const SignInScreen = ({ navigation }) => {
             return userName == item.username && password == item.password;
         });*/
 
-        try {
-            firebase.auth().signInWithEmailAndPassword(userName, password).then(function (user) {
-                const foundUser = (user) => {
-                    return user.email;
-                }
-                signIn(foundUser);
-            })
-        } catch (error) {
-            console.log(error.toString());
-        }
-
         if (data.username.length == 0 || data.password.length == 0) {
             Alert.alert('Wrong Input!', 'Username or password field cannot be empty.', [
                 { text: 'Okay' }
             ]);
             return;
         }
+
+        firebase.auth().signInWithEmailAndPassword(userName, password).then(() => {
+            const foundUser = (user) => {
+                return user.email;
+            }
+            signIn(foundUser);
+        }).catch((error) => {
+            Alert.alert('Invalid username or password');
+            console.log(error);
+        })
 
         /*if (foundUser.length == 0) {
             Alert.alert('Invalid User!', 'Username or password is incorrect.', [
@@ -129,7 +142,7 @@ const SignInScreen = ({ navigation }) => {
             >
                 <Text style={[styles.text_footer, {
                     color: colors.text
-                }]}>Username</Text>
+                }]}>Email Address</Text>
                 <View style={styles.action}>
                     <FontAwesome
                         name="user-o"
@@ -137,7 +150,7 @@ const SignInScreen = ({ navigation }) => {
                         size={20}
                     />
                     <TextInput
-                        placeholder="Your Username"
+                        placeholder="Your Email"
                         placeholderTextColor="#666666"
                         style={[styles.textInput, {
                             color: colors.text
@@ -160,7 +173,7 @@ const SignInScreen = ({ navigation }) => {
                 </View>
                 {data.isValidUser ? null :
                     <Animatable.View animation="fadeInLeft" duration={500}>
-                        <Text style={styles.errorMsg}>Username must be 4 characters long.</Text>
+                        <Text style={styles.errorMsg}>Not valid email address</Text>
                     </Animatable.View>
                 }
 
@@ -209,10 +222,9 @@ const SignInScreen = ({ navigation }) => {
                     </Animatable.View>
                 }
 
-
-                <TouchableOpacity>
+                {/* <TouchableOpacity>
                     <Text style={{ color: '#009387', marginTop: 15 }}>Forgot password?</Text>
-                </TouchableOpacity>
+                </TouchableOpacity> */}
                 <View style={styles.button}>
                     <TouchableOpacity
                         style={styles.signIn}

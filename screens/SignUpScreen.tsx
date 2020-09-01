@@ -84,7 +84,7 @@ const SignUpScreen = ({ navigation }) => {
                 animation="fadeInUpBig"
                 style={styles.footer}>
                 <ScrollView>
-                    <Text style={styles.text_footer}>Username</Text>
+                    <Text style={styles.text_footer}>Email Address</Text>
                     <View style={styles.action}>
                         <FontAwesome
                             name="user-o"
