@@ -2,7 +2,6 @@ import { useTheme } from '@react-navigation/native';
 import React from 'react';
 import {
     Dimensions,
-
     StatusBar, StyleSheet, Text,
     TouchableOpacity, View
 } from 'react-native';
@@ -28,7 +27,7 @@ const SplashScreen = ({ navigation }) => {
                     animation="bounceIn"
                     style={[styles.title, { color: 'white' }]}
                 >
-                    MyHeart
+                    FitMate
                 </Animatable.Text>
             </View>
             <Animatable.View
