@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { View, StyleSheet, Alert, ActivityIndicator, Text, ScrollView, FlatList } from 'react-native';
+import { View, StyleSheet, Alert, ActivityIndicator, Text, ScrollView, FlatList, StatusBar } from 'react-native';
 import { useTheme } from '@react-navigation/native';
 import Fire from '../api/Fire';
 import todoColors from '../components/Colors';
@@ -92,7 +92,8 @@ const DetailsScreen = ({ navigation }) => {
 
   return (
     <ScrollView>
-      <View style={styles.container}>
+      <StatusBar backgroundColor='#009387' barStyle="light-content" />
+      <View>
         <DistanceChart
           defaultDistance={defDistanceGraph}
           distance={distanceGraph}

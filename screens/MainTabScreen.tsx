@@ -38,7 +38,7 @@ const MainTabScreen = () => (
       name="Details"
       component={DetailsStackScreen}
       options={{
-        tabBarLabel: 'Updates',
+        tabBarLabel: 'Details',
         tabBarColor: '#1f65ff',
         tabBarIcon: ({ color }) => (
           <Icon name="ios-notifications" color={color} size={26} />
@@ -83,7 +83,7 @@ const HomeStackScreen = ({ navigation }) => (
     }
   }}>
     <HomeStack.Screen name="Home" component={HomeScreen} options={{
-      title: 'Overview',
+      title: 'Workout Programs',
       headerLeft: () => (
         <Icon.Button name="ios-menu" size={25} backgroundColor="#009387" onPress={() => navigation.openDrawer()}></Icon.Button>
       )
@@ -116,7 +116,7 @@ const ProfileStackScreen = ({ navigation }) => {
     <ProfileStack.Navigator
       screenOptions={{
         headerStyle: {
-          backgroundColor: colors.background,
+          backgroundColor: '#694fad',
           shadowColor: colors.background, // iOS
           elevation: 0, // Android
         },
@@ -132,8 +132,8 @@ const ProfileStackScreen = ({ navigation }) => {
               <Icon.Button
                 name="ios-menu"
                 size={25}
-                backgroundColor={colors.background}
-                color={colors.text}
+                backgroundColor='#694fad'
+                color='#fff'
                 onPress={() => navigation.openDrawer()}
               />
             </View>
@@ -143,8 +143,8 @@ const ProfileStackScreen = ({ navigation }) => {
               <MaterialCommunityIcons.Button
                 name="account-edit"
                 size={25}
-                backgroundColor={colors.background}
-                color={colors.text}
+                backgroundColor='#694fad'
+                color='#fff'
                 onPress={() => navigation.navigate('EditProfile')}
               />
             </View>

@@ -1,6 +1,6 @@
 import { useTheme } from '@react-navigation/native';
 import React, { useEffect, useState } from 'react';
-import { StyleSheet, View, Text, TouchableOpacity, FlatList, Modal, Alert, ActivityIndicator } from 'react-native';
+import { StyleSheet, View, Text, TouchableOpacity, FlatList, Modal, Alert, ActivityIndicator, StatusBar } from 'react-native';
 import todoColors from '../components/Colors';
 import { AntDesign } from '@expo/vector-icons';
 import TodoList from '../components/TodoList';
@@ -74,6 +74,7 @@ const HomeScreen = ({ props, route, navigation }) => {
   }
   return (
     <View style={styles.container}>
+      <StatusBar backgroundColor='#009387' barStyle="light-content" />
       <Modal
         animationType='slide'
         visible={addTodoVisible}
