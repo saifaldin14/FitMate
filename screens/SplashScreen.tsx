@@ -21,7 +21,7 @@ const SplashScreen = ({ navigation }) => {
                     duraton="1500"
                     source={require('../assets/logo.png')}
                     style={styles.logo}
-                    resizeMode="stretch"
+                // resizeMode="stretch"
                 />
                 <Animatable.Text
                     animation="bounceIn"
