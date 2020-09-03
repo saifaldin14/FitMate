@@ -1,4 +1,4 @@
-# MyHeart
+# FitMate
 React Native Fitness App to track run, workout and calorie data
 
 <img src="./media/splash.png" width="40%">
