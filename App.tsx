@@ -38,7 +38,7 @@ const Drawer = createDrawerNavigator();
 const App = () => {
   // const [isLoading, setIsLoading] = React.useState(true);
   // const [userToken, setUserToken] = React.useState(null);
-
+  console.disableYellowBox = true;
   const [isDarkTheme, setIsDarkTheme] = React.useState(false);
 
   const initialLoginState = {

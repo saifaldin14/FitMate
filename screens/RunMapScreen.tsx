@@ -13,7 +13,9 @@ import { useTheme } from 'react-native-paper';
 import FloatingButton from '../components/FloatingButton';
 import { Map } from '../components/Map';
 import { ModalView } from '../components/ModalView';
-import GetLocation from 'react-native-get-location'
+import GetLocation from 'react-native-get-location';
+import * as Location from 'expo-location';
+import * as Permissions from 'expo-permissions';
 import Fire from '../api/Fire';
 import { mapDarkStyle, mapStandardStyle } from '../model/mapData';
 
@@ -55,14 +57,27 @@ const RunMapScreen = ({ navigation }) => {
       (error) => alert(error.message),
       { enableHighAccuracy: true, timeout: 20000, maximumAge: 1000 }
     )*/
-    this.watchID = navigator.geolocation.watchPosition((position) => {
-      //setInterval(() => { success(position) }, 1000);
+    // (async () => {
+    //   let { status } = await Location.requestPermissionsAsync();
 
+    //   if (status === 'granted') {
+    //     const watchId = await Location.watchPositionAsync(
+    //       {
+    //         enableHighAccuracy: false,
+    //       },
+    //       position => {
+    //         handleUpdates(position, position.coords.latitude, position.coords.longitude, position.coords.speed);
+    //       }
+    //     )
+    //   }
+    // })();
+
+    const watchId = navigator.geolocation.watchPosition((position) => {
       handleUpdates(position, position.coords.latitude, position.coords.longitude, position.coords.speed);
     });
 
     return () => {
-      navigator.geolocation.clearWatch(this.watchID);
+      navigator.geolocation.clearWatch(watchId);
     }
   }, [state]);
 
@@ -154,7 +169,7 @@ const RunMapScreen = ({ navigation }) => {
       speed: 0,
       averageSpeed: 0,
     }));
-    navigator.geolocation.clearWatch(this.watchID);
+    // navigator.geolocation.clearWatch(this.watchID);
     navigation.navigate('Details');
     //setState(state => ({ ...state, isModalVisible: !state.isModalVisible }));
   }
@@ -201,7 +216,7 @@ const RunMapScreen = ({ navigation }) => {
       })
       .catch(error => {
         const { code, message } = error;
-        //console.log(code, message);
+        // console.log(code, message);
       });
   });
 
