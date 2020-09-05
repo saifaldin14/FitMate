@@ -16,6 +16,7 @@ import { decode, encode } from 'base-64'
 const globalAny: any = global;
 if (!globalAny.btoa) { globalAny.btoa = encode }
 if (!globalAny.atob) { globalAny.atob = decode }
+// require('dotenv').config();
 
 const firebaseConfig = {
   apiKey: "AIzaSyDL_6h5isQQHhEYW3NX1Z4IB2oq0Yuk_kk",
