@@ -136,9 +136,9 @@ const ProfileImagePicker = ({ image, onImagePicked }) => {
             <Text style={styles.panelTitle}>Upload Photo</Text>
             <Text style={styles.panelSubtitle}>Choose Your Profile Picture</Text>
           </View>
-          <TouchableOpacity style={styles.panelButton}>
+          {/* <TouchableOpacity style={styles.panelButton}>
             <Text style={styles.panelButtonTitle}>Take Photo</Text>
-          </TouchableOpacity>
+          </TouchableOpacity> */}
           <TouchableOpacity style={styles.panelButton} onPress={pickImageHandler}>
             <Text style={styles.panelButtonTitle}>Choose From Library</Text>
           </TouchableOpacity>
