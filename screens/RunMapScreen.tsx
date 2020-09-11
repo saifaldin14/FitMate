@@ -18,13 +18,13 @@ import * as Location from 'expo-location';
 import * as Permissions from 'expo-permissions';
 import Fire from '../api/Fire';
 import { mapDarkStyle, mapStandardStyle } from '../model/mapData';
+import { } from '@react-native-community/geolocation';
 
 const { width, height } = Dimensions.get('window')
 const LATITUDE_DELTA = 0.007;
 const LONGITUDE_DELTA = 0.007;
 const LATITUDE = 37.78825;
 const LONGITUDE = -122.4324;
-var email = "ttt";
 
 const RunMapScreen = ({ navigation }) => {
   const paperTheme = useTheme();

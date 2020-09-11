@@ -22,8 +22,13 @@
       "**/*"
     ],
     "ios": {
-      "supportsTablet": true
+      "supportsTablet": true,
+      "bundleIdentifier": "com.saif.fitmate"
     },
-    "description": ""
+    "description": "",
+    "android": {
+      "package": "com.saif.fitmate"
+    },
+    "entryPoint": "node_modules/expo/AppEntry.js"
   }
 }
