@@ -18,13 +18,21 @@ import * as Location from 'expo-location';
 import * as Permissions from 'expo-permissions';
 import Fire from '../api/Fire';
 import { mapDarkStyle, mapStandardStyle } from '../model/mapData';
-import { } from '@react-native-community/geolocation';
 
+// Geolocation.setRNConfiguration(config);
 const { width, height } = Dimensions.get('window')
 const LATITUDE_DELTA = 0.007;
 const LONGITUDE_DELTA = 0.007;
 const LATITUDE = 37.78825;
 const LONGITUDE = -122.4324;
+
+const LOCATION_SETTINGS = {
+  accuracy: Location.Accuracy.Balanced,
+  timeInterval: 200,
+  distanceInterval: 0,
+};
+
+var email = "ttt";
 
 const RunMapScreen = ({ navigation }) => {
   const paperTheme = useTheme();
@@ -49,7 +57,7 @@ const RunMapScreen = ({ navigation }) => {
     email: "grt",
   });
   const [isModalVisible, setModalVisible] = useState(false);
-
+  const [location, setLocation] = useState(null);
   useEffect(() => {
     /*navigator.geolocation.getCurrentPosition(
       (position) => {
@@ -71,13 +79,25 @@ const RunMapScreen = ({ navigation }) => {
     //     )
     //   }
     // })();
+    let location: any;
+    (async () => {
+      let { status } = await Location.requestPermissionsAsync();
+      if (status !== 'granted') {
+        Alert.alert('Permission to access location was denied');
+      }
 
-    const watchId = navigator.geolocation.watchPosition((position) => {
-      handleUpdates(position, position.coords.latitude, position.coords.longitude, position.coords.speed);
-    });
+      location = await Location.watchPositionAsync(LOCATION_SETTINGS, (location) => {
+        handleUpdates(location, location.coords.latitude, location.coords.longitude, location.coords.speed);
+      })
+    })();
+
+    // const watchId = Geolocation.watchPosition((position) => {
+    //   handleUpdates(position, position.coords.latitude, position.coords.longitude, position.coords.speed);
+    // });
 
     return () => {
-      navigator.geolocation.clearWatch(watchId);
+      location.remove();
+      // Geolocation.clearWatch(watchId);
     }
   }, [state]);
 
