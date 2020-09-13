@@ -14,10 +14,10 @@ import FloatingButton from '../components/FloatingButton';
 import { Map } from '../components/Map';
 import { ModalView } from '../components/ModalView';
 import GetLocation from 'react-native-get-location';
-import * as Location from 'expo-location';
 import * as Permissions from 'expo-permissions';
 import Fire from '../api/Fire';
 import { mapDarkStyle, mapStandardStyle } from '../model/mapData';
+import Geolocation from '@react-native-community/geolocation';
 
 // Geolocation.setRNConfiguration(config);
 const { width, height } = Dimensions.get('window')
@@ -26,11 +26,11 @@ const LONGITUDE_DELTA = 0.007;
 const LATITUDE = 37.78825;
 const LONGITUDE = -122.4324;
 
-const LOCATION_SETTINGS = {
-  accuracy: Location.Accuracy.Balanced,
-  timeInterval: 200,
-  distanceInterval: 0,
-};
+// const LOCATION_SETTINGS = {
+//   accuracy: Location.Accuracy.Balanced,
+//   timeInterval: 200,
+//   distanceInterval: 0,
+// };
 
 var email = "ttt";
 
@@ -57,7 +57,6 @@ const RunMapScreen = ({ navigation }) => {
     email: "grt",
   });
   const [isModalVisible, setModalVisible] = useState(false);
-  const [location, setLocation] = useState(null);
   useEffect(() => {
     /*navigator.geolocation.getCurrentPosition(
       (position) => {
@@ -65,39 +64,27 @@ const RunMapScreen = ({ navigation }) => {
       (error) => alert(error.message),
       { enableHighAccuracy: true, timeout: 20000, maximumAge: 1000 }
     )*/
+
+    // var location: any;
     // (async () => {
     //   let { status } = await Location.requestPermissionsAsync();
-
-    //   if (status === 'granted') {
-    //     const watchId = await Location.watchPositionAsync(
-    //       {
-    //         enableHighAccuracy: false,
-    //       },
-    //       position => {
-    //         handleUpdates(position, position.coords.latitude, position.coords.longitude, position.coords.speed);
-    //       }
-    //     )
+    //   if (status !== 'granted') {
+    //     Alert.alert('Permission to access location was denied');
     //   }
+
+    //   this.watchId = await Location.watchPositionAsync(LOCATION_SETTINGS, (position) => {
+    //     handleUpdates(position, position.coords.latitude, position.coords.longitude, position.coords.speed);
+    //   });
     // })();
-    let location: any;
-    (async () => {
-      let { status } = await Location.requestPermissionsAsync();
-      if (status !== 'granted') {
-        Alert.alert('Permission to access location was denied');
-      }
 
-      location = await Location.watchPositionAsync(LOCATION_SETTINGS, (location) => {
-        handleUpdates(location, location.coords.latitude, location.coords.longitude, location.coords.speed);
-      })
-    })();
+    const watchId = Geolocation.watchPosition((position) => {
+      handleUpdates(position, position.coords.latitude, position.coords.longitude, position.coords.speed);
+    });
 
-    // const watchId = Geolocation.watchPosition((position) => {
-    //   handleUpdates(position, position.coords.latitude, position.coords.longitude, position.coords.speed);
-    // });
 
     return () => {
-      location.remove();
-      // Geolocation.clearWatch(watchId);
+      // this.watchId.remove();
+      Geolocation.clearWatch(watchId);
     }
   }, [state]);
 
