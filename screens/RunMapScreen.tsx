@@ -58,12 +58,12 @@ const RunMapScreen = ({ navigation }) => {
     email: "grt",
   });
   const [isModalVisible, setModalVisible] = useState(false);
-  const [isLocationTracking, setIsLocationTracking] = useState(false);
+  const [isLocationTracking, setIsLocationTracking] = useState(true);
   useEffect(() => {
     async function getPos() {
       let { status } = await Location.requestPermissionsAsync();
-      if (status === 'granted') {
-        setIsLocationTracking(true);
+      if (status !== 'granted') {
+        setIsLocationTracking(false);
       }
     }
     getPos();
