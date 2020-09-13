@@ -15,9 +15,10 @@ import { Map } from '../components/Map';
 import { ModalView } from '../components/ModalView';
 import GetLocation from 'react-native-get-location';
 import * as Permissions from 'expo-permissions';
+import * as Location from 'expo-location';
 import Fire from '../api/Fire';
 import { mapDarkStyle, mapStandardStyle } from '../model/mapData';
-import Geolocation from '@react-native-community/geolocation';
+// import Geolocation from '@react-native-community/geolocation';
 
 // Geolocation.setRNConfiguration(config);
 const { width, height } = Dimensions.get('window')
@@ -57,6 +58,16 @@ const RunMapScreen = ({ navigation }) => {
     email: "grt",
   });
   const [isModalVisible, setModalVisible] = useState(false);
+  const [isLocationTracking, setIsLocationTracking] = useState(false);
+  useEffect(() => {
+    async function getPos() {
+      let { status } = await Location.requestPermissionsAsync();
+      if (status === 'granted') {
+        setIsLocationTracking(true);
+      }
+    }
+    getPos();
+  }, [])
   useEffect(() => {
     /*navigator.geolocation.getCurrentPosition(
       (position) => {
@@ -76,15 +87,29 @@ const RunMapScreen = ({ navigation }) => {
     //     handleUpdates(position, position.coords.latitude, position.coords.longitude, position.coords.speed);
     //   });
     // })();
-
-    const watchId = Geolocation.watchPosition((position) => {
-      handleUpdates(position, position.coords.latitude, position.coords.longitude, position.coords.speed);
-    });
-
+    // async function getPos() {
+    //   let { status } = await Location.requestPermissionsAsync();
+    //   if (status === 'granted') {
+    //     watchId = navigator.geolocation.watchPosition((position) => {
+    //       handleUpdates(position, position.coords.latitude, position.coords.longitude, position.coords.speed);
+    //     }, error => {
+    //       console.log(error);
+    //     });
+    //   }
+    // }
+    // getPos();
+    var watchId: any;
+    if (isLocationTracking) {
+      watchId = navigator.geolocation.watchPosition((position) => {
+        handleUpdates(position, position.coords.latitude, position.coords.longitude, position.coords.speed);
+      }, error => {
+        console.log(error);
+      });
+    }
 
     return () => {
       // this.watchId.remove();
-      Geolocation.clearWatch(watchId);
+      navigator.geolocation.clearWatch(watchId);
     }
   }, [state]);
 
