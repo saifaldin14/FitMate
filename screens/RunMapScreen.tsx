@@ -66,7 +66,8 @@ const RunMapScreen = ({ navigation }) => {
       }
     }
     getPos();
-  }, [])
+  }, []);
+
   useEffect(() => {
     /*navigator.geolocation.getCurrentPosition(
       (position) => {
