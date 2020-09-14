@@ -22,7 +22,12 @@
       "**/*"
     ],
     "ios": {
-      "supportsTablet": true
+      "bundleIdentifier": "com.saif.fitmate",
+      "buildNumber": "1.0.0"
+    },
+    "android": {
+      "package": "com.saif.fitmate",
+      "versionCode": 1
     },
     "description": ""
   }
