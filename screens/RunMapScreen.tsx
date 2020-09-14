@@ -58,12 +58,11 @@ const RunMapScreen = ({ navigation }) => {
     email: "grt",
   });
   const [isModalVisible, setModalVisible] = useState(false);
-  const [isLocationTracking, setIsLocationTracking] = useState(true);
   useEffect(() => {
     async function getPos() {
       let { status } = await Location.requestPermissionsAsync();
       if (status !== 'granted') {
-        setIsLocationTracking(false);
+        Alert.alert("Permission denied. Unable to track run");
       }
     }
     getPos();
@@ -99,13 +98,11 @@ const RunMapScreen = ({ navigation }) => {
     // }
     // getPos();
     var watchId: any;
-    if (isLocationTracking) {
-      watchId = navigator.geolocation.watchPosition((position) => {
-        handleUpdates(position, position.coords.latitude, position.coords.longitude, position.coords.speed);
-      }, error => {
-        console.log(error);
-      });
-    }
+    watchId = navigator.geolocation.watchPosition((position) => {
+      handleUpdates(position, position.coords.latitude, position.coords.longitude, position.coords.speed);
+    }, error => {
+      console.log(error);
+    });
 
     return () => {
       // this.watchId.remove();
