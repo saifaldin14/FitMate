@@ -113,10 +113,17 @@ const SignInScreen = ({ navigation }) => {
             const foundUser = (user) => {
                 return user.email;
             }
+            var ref = firebase.database().ref(userName.replace('.', ''));
+            firebase.database().ref(ref).child("userData").set({
+                firstName: "Jane",
+                lastName: "Doe",
+                weight: "??",
+                age: "??"
+            });
             signIn(foundUser);
         }).catch((error) => {
             Alert.alert('Invalid username or password');
-            console.log(error);
+            // console.log(error);
         })
 
         /*if (foundUser.length == 0) {

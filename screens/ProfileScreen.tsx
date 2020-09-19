@@ -17,10 +17,10 @@ import {
 const ProfileScreen = () => {
   const { colors } = useTheme();
   const [userData, setUserData] = useState({
-    firstName: "",
-    lastName: "",
-    age: "",
-    weight: "",
+    firstName: "Jane",
+    lastName: "Doe",
+    age: "??",
+    weight: "??",
     email: "",
   });
   const [url, setUrl] = useState('https://api.adorable.io/avatars/80/abott@adorable.png');
@@ -32,14 +32,36 @@ const ProfileScreen = () => {
       var ref = firebase.database().ref(user.email.replace('.', ''));
       firebase.database().ref(ref).child("userData").once('value').then((snapshot) => {
         //console.log(snapshot.val().firstName)
-        setUserData(userData => ({
-          ...userData,
-          firstName: snapshot.val().firstName,
-          lastName: snapshot.val().lastName,
-          age: snapshot.val().age,
-          weight: snapshot.val().weight,
-          email: user.email,
-        }));
+        if (snapshot.val().firstName !== null) {
+          setUserData(userData => ({
+            ...userData,
+            firstName: snapshot.val().firstName,
+          }));
+        }
+        if (snapshot.val().lastName !== null) {
+          setUserData(userData => ({
+            ...userData,
+            lastName: snapshot.val().lastName,
+          }));
+        }
+        if (snapshot.val().age !== null) {
+          setUserData(userData => ({
+            ...userData,
+            age: snapshot.val().age,
+          }));
+        }
+        if (snapshot.val().weight !== null) {
+          setUserData(userData => ({
+            ...userData,
+            weight: snapshot.val().weight,
+          }));
+        }
+        if (snapshot.val().email !== null) {
+          setUserData(userData => ({
+            ...userData,
+            email: snapshot.val().email,
+          }));
+        }
       });
       const iRef = "/images/" + user.email.replace('.', '');
       const imageRef = firebase.storage().ref(iRef);
@@ -48,11 +70,14 @@ const ProfileScreen = () => {
     })
   }, []);
 
-  useEffect(async () => {
-    const temp_notes = await AsyncStorage.getItem('notes');
-    if (temp_notes && temp_notes.length > 0) {
-      setNotes(JSON.parse(temp_notes));
+  useEffect(() => {
+    async function getNotes() {
+      const temp_notes = await AsyncStorage.getItem('notes');
+      if (temp_notes && temp_notes.length > 0) {
+        setNotes(JSON.parse(temp_notes));
+      }
     }
+    getNotes();
   }, []);
 
   const updateAsyncStorage = (send_notes) => {

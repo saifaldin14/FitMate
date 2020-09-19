@@ -140,7 +140,6 @@ export default withFormik({
   handleSubmit: (values, { props }) => {
     firebase.auth().onAuthStateChanged((user) => {
       var ref = firebase.database().ref(user.email.replace('.', ''));
-      var key = firebase.database().ref(ref).push().key;
       firebase.database().ref(ref).child("userData").set({
         firstName: values.firstName,
         lastName: values.lastName,
