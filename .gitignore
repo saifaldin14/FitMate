@@ -106,6 +106,7 @@ local.properties
 # node.js
 #
 node_modules/
+api/Fire.ts
 npm-debug.log
 yarn-error.log
 
