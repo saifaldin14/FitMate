@@ -1,21 +1,23 @@
-import Constants from 'expo-constants';
-import * as ImagePicker from 'expo-image-picker';
-import * as Permissions from 'expo-permissions';
-import firebase from 'firebase';
-import React, { useEffect, useState } from 'react';
+import Constants from "expo-constants";
+import * as ImagePicker from "expo-image-picker";
+import * as Permissions from "expo-permissions";
+import firebase from "firebase";
+import React, { useEffect, useState } from "react";
 import {
   Alert,
   ImageBackground,
-  Platform, StyleSheet, Text,
-  TouchableOpacity, View
-} from 'react-native';
-import Modal from 'react-native-modal';
-import { useTheme } from 'react-native-paper';
-import Animated from 'react-native-reanimated';
-import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
+  Platform,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
+} from "react-native";
+import Modal from "react-native-modal";
+import { useTheme } from "react-native-paper";
+import Animated from "react-native-reanimated";
+import Icon from "react-native-vector-icons/MaterialCommunityIcons";
 
 const ProfileImagePicker = ({ image, onImagePicked }) => {
-
   const [selectedImage, setSelectedImage] = useState();
   const [isModalVisible, setIsModalVisible] = useState(false);
   const { colors } = useTheme();
@@ -26,13 +28,15 @@ const ProfileImagePicker = ({ image, onImagePicked }) => {
       setSelectedImage({ uri: image });
     }
     getPermissionAsync();
-  }, [image])
+  }, [image]);
 
   const getPermissionAsync = async () => {
     if (Constants.platform.ios) {
       const { status } = await Permissions.askAsync(Permissions.CAMERA_ROLL);
-      if (status !== 'granted') {
-        Alert.alert('Sorry, we need camera roll permissions to make this work!');
+      if (status !== "granted") {
+        Alert.alert(
+          "Sorry, we need camera roll permissions to make this work!"
+        );
       }
     }
   };
@@ -49,10 +53,11 @@ const ProfileImagePicker = ({ image, onImagePicked }) => {
         setSelectedImage({ uri: result.uri });
         onImagePicked({ uri: result.uri });
         firebase.auth().onAuthStateChanged(async (user) => {
-          //var ref = firebase.database().ref(user.email.replace('.', ''));
-          uploadImage(result.uri, user.email.replace('.', '')).then(() => {
-            Alert.alert("Success");
-          })
+          //let ref = firebase.database().ref(user.email.replace('.', ''));
+          uploadImage(result.uri, user.email.replace(".", ""))
+            .then(() => {
+              Alert.alert("Success");
+            })
             .catch((error) => {
               Alert.alert(error);
             });
@@ -69,9 +74,12 @@ const ProfileImagePicker = ({ image, onImagePicked }) => {
     const response = await fetch(uri);
     const blob = await response.blob();
 
-    var ref = firebase.storage().ref().child("images/" + imageName);
+    let ref = firebase
+      .storage()
+      .ref()
+      .child("images/" + imageName);
     return ref.put(blob);
-  }
+  };
 
   const fall = new Animated.Value(1);
 
@@ -80,29 +88,34 @@ const ProfileImagePicker = ({ image, onImagePicked }) => {
       {/*<View style={styles.imageContainer}>
         <Image source={selectedImage} style={styles.previewImage} />
       </View>*/}
-      <Animated.View style={{
-        margin: 20,
-        opacity: Animated.add(0.1, Animated.multiply(fall, 1.0)),
-      }}>
+      <Animated.View
+        style={{
+          margin: 20,
+          opacity: Animated.add(0.1, Animated.multiply(fall, 1.0)),
+        }}
+      >
         <TouchableOpacity onPress={() => setIsModalVisible(!isModalVisible)}>
           <View
             style={{
               height: 100,
               width: 100,
               borderRadius: 15,
-              justifyContent: 'center',
-              alignItems: 'center',
-            }}>
+              justifyContent: "center",
+              alignItems: "center",
+            }}
+          >
             <ImageBackground
               source={selectedImage}
               style={{ height: 100, width: 100 }}
-              imageStyle={{ borderRadius: 15 }}>
+              imageStyle={{ borderRadius: 15 }}
+            >
               <View
                 style={{
                   flex: 1,
-                  justifyContent: 'center',
-                  alignItems: 'center',
-                }}>
+                  justifyContent: "center",
+                  alignItems: "center",
+                }}
+              >
                 <Icon
                   name="camera"
                   size={35}
@@ -110,10 +123,10 @@ const ProfileImagePicker = ({ image, onImagePicked }) => {
                   style={{
                     color: colors.text,
                     opacity: 0.7,
-                    alignItems: 'center',
-                    justifyContent: 'center',
+                    alignItems: "center",
+                    justifyContent: "center",
                     borderWidth: 1,
-                    borderColor: '#fff',
+                    borderColor: "#fff",
                     borderRadius: 10,
                   }}
                 />
@@ -124,67 +137,76 @@ const ProfileImagePicker = ({ image, onImagePicked }) => {
         {/*<View style={styles.button}>
           <Button title="Pick Image" onPress={pickImageHandler} />
                 </View>*/}
-
       </Animated.View>
-      <Modal testID={'modal'}
+      <Modal
+        testID={"modal"}
         isVisible={isModalVisible}
-        onSwipeComplete={() => { setIsModalVisible(false) }}
-        swipeDirection={['up', 'left', 'right', 'down']}
-        style={styles.modalView}>
+        onSwipeComplete={() => {
+          setIsModalVisible(false);
+        }}
+        swipeDirection={["up", "left", "right", "down"]}
+        style={styles.modalView}
+      >
         <View style={styles.panel}>
-          <View style={{ alignItems: 'center' }}>
+          <View style={{ alignItems: "center" }}>
             <Text style={styles.panelTitle}>Upload Photo</Text>
-            <Text style={styles.panelSubtitle}>Choose Your Profile Picture</Text>
+            <Text style={styles.panelSubtitle}>
+              Choose Your Profile Picture
+            </Text>
           </View>
           {/* <TouchableOpacity style={styles.panelButton}>
             <Text style={styles.panelButtonTitle}>Take Photo</Text>
           </TouchableOpacity> */}
-          <TouchableOpacity style={styles.panelButton} onPress={pickImageHandler}>
+          <TouchableOpacity
+            style={styles.panelButton}
+            onPress={pickImageHandler}
+          >
             <Text style={styles.panelButtonTitle}>Choose From Library</Text>
           </TouchableOpacity>
           <TouchableOpacity
             style={styles.panelButton}
-            onPress={() => setIsModalVisible(false)}>
+            onPress={() => setIsModalVisible(false)}
+          >
             <Text style={styles.panelButtonTitle}>Cancel</Text>
           </TouchableOpacity>
         </View>
       </Modal>
     </View>
-  )
-}
+  );
+};
 
 export default ProfileImagePicker;
 
 const styles = StyleSheet.create({
   container: {
-    width: '100%',
-    alignItems: 'center'
+    width: "100%",
+    alignItems: "center",
   },
   imageContainer: {
     borderWidth: 1,
-    borderColor: 'black',
-    backgroundColor: '#eee',
-    width: '90%',
+    borderColor: "black",
+    backgroundColor: "#eee",
+    width: "90%",
     height: 150,
     borderRadius: 30,
   },
   button: {
-    margin: 8
+    margin: 8,
   },
   previewImage: {
-    width: '100%',
-    height: '100%'
+    width: "100%",
+    height: "100%",
   },
   commandButton: {
     padding: 15,
     borderRadius: 10,
-    backgroundColor: '#FF6347',
-    alignItems: 'center',
+    backgroundColor: "#FF6347",
+    alignItems: "center",
     marginTop: 10,
   },
   panel: {
     padding: 20,
-    backgroundColor: '#FFFFFF',
+    backgroundColor: "#FFFFFF",
     paddingTop: 20,
     // borderTopLeftRadius: 20,
     // borderTopRightRadius: 20,
@@ -194,8 +216,8 @@ const styles = StyleSheet.create({
     // shadowOpacity: 0.4,
   },
   header: {
-    backgroundColor: '#FFFFFF',
-    shadowColor: '#333333',
+    backgroundColor: "#FFFFFF",
+    shadowColor: "#333333",
     shadowOffset: { width: -1, height: -3 },
     shadowRadius: 2,
     shadowOpacity: 0.4,
@@ -205,13 +227,13 @@ const styles = StyleSheet.create({
     borderTopRightRadius: 20,
   },
   panelHeader: {
-    alignItems: 'center',
+    alignItems: "center",
   },
   panelHandle: {
     width: 40,
     height: 8,
     borderRadius: 4,
-    backgroundColor: '#00000040',
+    backgroundColor: "#00000040",
     marginBottom: 10,
   },
   panelTitle: {
@@ -220,45 +242,45 @@ const styles = StyleSheet.create({
   },
   panelSubtitle: {
     fontSize: 14,
-    color: 'gray',
+    color: "gray",
     height: 30,
     marginBottom: 10,
   },
   panelButton: {
     padding: 13,
     borderRadius: 10,
-    backgroundColor: '#FF6347',
-    alignItems: 'center',
+    backgroundColor: "#FF6347",
+    alignItems: "center",
     marginVertical: 7,
   },
   panelButtonTitle: {
     fontSize: 17,
-    fontWeight: 'bold',
-    color: 'white',
+    fontWeight: "bold",
+    color: "white",
   },
   action: {
-    flexDirection: 'row',
+    flexDirection: "row",
     marginTop: 10,
     marginBottom: 10,
     borderBottomWidth: 1,
-    borderBottomColor: '#f2f2f2',
+    borderBottomColor: "#f2f2f2",
     paddingBottom: 5,
   },
   actionError: {
-    flexDirection: 'row',
+    flexDirection: "row",
     marginTop: 10,
     borderBottomWidth: 1,
-    borderBottomColor: '#FF0000',
+    borderBottomColor: "#FF0000",
     paddingBottom: 5,
   },
   textInput: {
     flex: 1,
-    marginTop: Platform.OS === 'ios' ? 0 : -12,
+    marginTop: Platform.OS === "ios" ? 0 : -12,
     paddingLeft: 10,
-    color: '#05375a',
+    color: "#05375a",
   },
   modalView: {
-    justifyContent: 'flex-end',
+    justifyContent: "flex-end",
     margin: 0,
   },
-})
+});

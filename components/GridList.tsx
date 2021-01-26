@@ -1,8 +1,5 @@
-import React from 'react';
-import {
-  FlatList, StyleSheet,
-  Text
-} from 'react-native';
+import React from "react";
+import { FlatList, StyleSheet, Text } from "react-native";
 
 const GridList = (props) => {
   return (
@@ -14,28 +11,27 @@ const GridList = (props) => {
         keyExtractor={(item, index) => index.toString()}
         renderItem={({ item }) => {
           console.log(item);
-          return <Text style={styles.item}>{item}</Text>
-        }
-        }
+          return <Text style={styles.item}>{item}</Text>;
+        }}
       />
       <Text>Ingredients</Text>
     </>
-  )
-}
+  );
+};
 
-var styles = StyleSheet.create({
+const styles = StyleSheet.create({
   item: {
-    backgroundColor: 'grey',
+    backgroundColor: "grey",
     margin: 5,
     width: 90,
     padding: 8,
-    color: 'white'
+    color: "white",
   },
   grid: {
     marginBottom: 32,
     marginTop: 16,
-    alignItems: 'center'
-  }
-})
+    alignItems: "center",
+  },
+});
 
 export default GridList;

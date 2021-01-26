@@ -1,12 +1,21 @@
-import React, { useEffect, useState } from 'react';
-import { View, StyleSheet, Alert, ActivityIndicator, Text, ScrollView, FlatList, StatusBar } from 'react-native';
-import { useTheme } from '@react-navigation/native';
-import Fire from '../api/Fire';
-import todoColors from '../components/Colors';
-import DistanceChart from '../components/DistanceChart';
-import AverageSpeedChart from '../components/AverageSpeedChart';
-import { Card, CardItem, Body } from 'native-base';
-import todoColor from '../components/Colors';
+import React, { useEffect, useState } from "react";
+import {
+  View,
+  StyleSheet,
+  Alert,
+  ActivityIndicator,
+  Text,
+  ScrollView,
+  FlatList,
+  StatusBar,
+} from "react-native";
+import { useTheme } from "@react-navigation/native";
+import Fire from "../api/Fire";
+import todoColors from "../components/Colors";
+import DistanceChart from "../components/DistanceChart";
+import AverageSpeedChart from "../components/AverageSpeedChart";
+import { Card, CardItem, Body } from "native-base";
+import todoColor from "../components/Colors";
 
 const DetailsScreen = ({ navigation }) => {
   const { colors } = useTheme();
@@ -22,7 +31,7 @@ const DetailsScreen = ({ navigation }) => {
         return Alert.alert("Uh oh, something went wrong!");
       }
 
-      firebase.getRun(theRun => {
+      firebase.getRun((theRun) => {
         // theRun.forEach(data => {
         //   //distance.push(data.distance);
         // });
@@ -30,26 +39,26 @@ const DetailsScreen = ({ navigation }) => {
         let distance = [];
         let defaultDistance = [];
         let averageSpeed = [];
-        var i;
+        let i;
         for (i = 0; i < theRun.length; i++) {
-          var objDist = {};
-          var objAvgSpd = {};
+          let objDist = {};
+          let objAvgSpd = {};
           objDist[i + 1] = theRun[i].distance;
           objAvgSpd[i + 1] = theRun[i].averageSpeed;
-          //var obj = { i: theRun[i].distance };
+          //let obj = { i: theRun[i].distance };
           distance.push({
             key: i + 1,
-            value: theRun[i].distance
+            value: theRun[i].distance,
           });
 
           defaultDistance.push({
             key: i + 1,
-            value: 0
+            value: 0,
           });
 
           averageSpeed.push({
             x: i + 1,
-            y: theRun[i].averageSpeed
+            y: theRun[i].averageSpeed,
           });
         }
         setDistanceGraph(distance);
@@ -63,18 +72,24 @@ const DetailsScreen = ({ navigation }) => {
 
     return () => {
       firebase.detach();
-    }
+    };
   }, []);
 
-  const renderItem = data => {
+  const renderItem = (data) => {
     return (
       <View>
         <Card>
           <CardItem style={{ backgroundColor: colors.background }}>
             <Body>
-              <Text style={[styles.text, { color: colors.text }]}>Distance: {data.distance.toFixed(2)} km</Text>
-              <Text style={[styles.text, { color: colors.text }]}>Average Speed: {data.averageSpeed.toFixed(2)} km/h</Text>
-              <Text style={[styles.text, { color: colors.text }]}>Time: {data.time}</Text>
+              <Text style={[styles.text, { color: colors.text }]}>
+                Distance: {data.distance.toFixed(2)} km
+              </Text>
+              <Text style={[styles.text, { color: colors.text }]}>
+                Average Speed: {data.averageSpeed.toFixed(2)} km/h
+              </Text>
+              <Text style={[styles.text, { color: colors.text }]}>
+                Time: {data.time}
+              </Text>
             </Body>
           </CardItem>
         </Card>
@@ -92,7 +107,7 @@ const DetailsScreen = ({ navigation }) => {
 
   return (
     <ScrollView>
-      <StatusBar backgroundColor='#009387' barStyle="light-content" />
+      <StatusBar backgroundColor="#009387" barStyle="light-content" />
       <View>
         <DistanceChart
           defaultDistance={defDistanceGraph}
@@ -101,10 +116,12 @@ const DetailsScreen = ({ navigation }) => {
         <AverageSpeedChart avgSpeed={avgSpeedGraph} />
       </View>
       <View style={{ padding: 15 }}>
-        <Text style={[styles.textHeader, { color: colors.text }]}>Running History</Text>
+        <Text style={[styles.textHeader, { color: colors.text }]}>
+          Running History
+        </Text>
         <FlatList
           data={run}
-          keyExtractor={item => item.id.toString()}
+          keyExtractor={(item) => item.id.toString()}
           showsHorizontalScrollIndicator={false}
           renderItem={({ item }) => renderItem(item)}
           keyboardShouldPersistTaps="always"
@@ -119,18 +136,18 @@ export default DetailsScreen;
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    alignItems: 'center',
-    justifyContent: 'center'
+    alignItems: "center",
+    justifyContent: "center",
   },
   text: {
     fontSize: 16,
-    fontWeight: '300',
-    padding: 5
+    fontWeight: "300",
+    padding: 5,
   },
   textHeader: {
-    textAlign: 'center',
+    textAlign: "center",
     fontSize: 24,
-    fontWeight: '800',
-    paddingTop: 25
-  }
+    fontWeight: "800",
+    paddingTop: 25,
+  },
 });

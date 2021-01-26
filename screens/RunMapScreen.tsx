@@ -29,7 +29,7 @@ const LONGITUDE = -122.4324;
 //   distanceInterval: 0,
 // };
 
-var email = "ttt";
+let email = "ttt";
 
 const RunMapScreen = ({ navigation }) => {
   const paperTheme = useTheme();
@@ -65,7 +65,7 @@ const RunMapScreen = ({ navigation }) => {
   }, []);
 
   useEffect(() => {
-    var watchId: any;
+    let watchId: any;
     watchId = navigator.geolocation.watchPosition(
       (position) => {
         handleUpdates(
@@ -123,7 +123,7 @@ const RunMapScreen = ({ navigation }) => {
   };
 
   const openIsActive = () => {
-    var now;
+    let now;
     if (!state.isActive && state.startCounter === 0) {
       setState((state) => {
         return {
@@ -136,8 +136,8 @@ const RunMapScreen = ({ navigation }) => {
     } else if (state.isActive && state.startCounter === 1) {
       now = { ...state.now };
     } else if (!state.isActive && state.startCounter === 1) {
-      var then = { ...state.then };
-      var diff = -state.now.diff(now);
+      let then = { ...state.then };
+      let diff = -state.now.diff(now);
       setState((state) => ({ ...state, then: moment(then).add(diff) }));
     }
     setState((state) => ({ ...state, isActive: !state.isActive }));

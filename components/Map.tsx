@@ -9,7 +9,7 @@ const { width, height } = Dimensions.get("window");
 export const Map = memo((props) => {
   const theme = useTheme();
 
-  var backGroundColor = "#404040";
+  let backGroundColor = "#404040";
 
   return (
     <MapView

@@ -27,9 +27,9 @@ export function deleteData(data, deleteComplete) {
 }
 
 export async function getData(dataRetreived) {
-  var dataList = [];
+  let dataList = [];
 
-  var snapshot = await firebase
+  let snapshot = await firebase
     .firestore()
     .collection("Data")
     .orderBy("createdAt")
@@ -45,7 +45,7 @@ export async function getData(dataRetreived) {
 }
 
 function uuidFunc() {
-  var uuid = "",
+  let uuid = "",
     i,
     random;
 
@@ -63,7 +63,6 @@ function uuidFunc() {
 }
 
 function blobToFile(theBlob, fileName) {
-  //A Blob() is almost a File() - it's just missing the two properties below which we will add
   theBlob.lastModifiedDate = new Date();
   theBlob.name = fileName;
   return theBlob;
@@ -74,15 +73,16 @@ export function uploadData(data, onDataUploaded, { updating }) {
     const fileExtension = data.imageUri.split(".").pop();
     console.log("EXT: " + fileExtension);
 
-    var uuid = uuidFunc();
-    console.log(uuid);
+    let uuid = uuidFunc();
+    //console.log(uuid);
     const fileName = `${uuid}.${fileExtension}`;
-    console.log(fileName);
+    //console.log(fileName);
 
-    var storageRef = firebase.storage().ref(`data/images/${fileName}`);
+    let storageRef = firebase.storage().ref(`data/images/${fileName}`);
     console.log(typeof data.imageUri + " " + data.imageUri);
-    var blob = new Blob([data.imageUri], { type: "text/plain" });
-    var file = blobToFile(blob, fileName);
+
+    let blob = new Blob([data.imageUri], { type: "text/plain" });
+    let file = blobToFile(blob, fileName);
     storageRef.put(file).on(
       firebase.storage.TaskEvent.STATE_CHANGED,
       (snapshot) => {
