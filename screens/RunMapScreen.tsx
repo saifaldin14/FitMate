@@ -154,19 +154,6 @@ const RunMapScreen = ({ navigation }) => {
       });
     });
 
-    // firebase.auth().onAuthStateChanged((user) => {
-    //   var ref = firebase.database().ref(user.email.replace('.', ''));
-    //   var key = firebase.database().ref(ref).push().key;
-    //   firebase.database().ref(ref).child("workoutData").child(key).set({
-    //     email: user.email,
-    //     distance: state.distanceTravelled,
-    //     time: state.timeElapsed,
-    //     speed: state.speed,
-    //     averageSpeed: state.averageSpeed
-    //   });
-    // });
-
-    //setRouteCoordinates([]);
     setState((state) => ({
       ...state,
       isActive: false,
@@ -182,9 +169,7 @@ const RunMapScreen = ({ navigation }) => {
       speed: 0,
       averageSpeed: 0,
     }));
-    // navigator.geolocation.clearWatch(this.watchID);
     navigation.navigate("Details");
-    //setState(state => ({ ...state, isModalVisible: !state.isModalVisible }));
   };
 
   const endRun = () => {
@@ -225,7 +210,6 @@ const RunMapScreen = ({ navigation }) => {
   };
 
   const toggleModal = () => {
-    //setModalVisible(!isModalVisible);
     setState((state) => ({ ...state, isModalVisible: !state.isModalVisible }));
   };
 
@@ -243,7 +227,7 @@ const RunMapScreen = ({ navigation }) => {
       })
       .catch((error) => {
         const { code, message } = error;
-        // console.log(code, message);
+        console.log(code, message);
       });
   });
 
