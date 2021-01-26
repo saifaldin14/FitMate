@@ -1,14 +1,21 @@
-import { useTheme } from '@react-navigation/native';
-import React, { useEffect, useState } from 'react';
-import { StyleSheet, View, Text, TouchableOpacity, FlatList, Modal, Alert, ActivityIndicator, StatusBar } from 'react-native';
-import todoColors from '../components/Colors';
-import { AntDesign } from '@expo/vector-icons';
-import TodoList from '../components/TodoList';
-import AddListModal from '../components/AddListModal';
-import Fire from '../api/Fire';
-
-//To implement live workout visit:
-//https://pusher.com/tutorials/workout-tracker-react-native#creating-a-pusher-app
+import { useTheme } from "@react-navigation/native";
+import React, { useEffect, useState } from "react";
+import {
+  StyleSheet,
+  View,
+  Text,
+  TouchableOpacity,
+  FlatList,
+  Modal,
+  Alert,
+  ActivityIndicator,
+  StatusBar,
+} from "react-native";
+import todoColors from "../components/Colors";
+import { AntDesign } from "@expo/vector-icons";
+import TodoList from "../components/TodoList";
+import AddListModal from "../components/AddListModal";
+import Fire from "../api/Fire";
 
 const HomeScreen = ({ props, route, navigation }) => {
   const { colors } = useTheme();
@@ -20,7 +27,7 @@ const HomeScreen = ({ props, route, navigation }) => {
 
   const toggleAddModal = () => {
     setAddTodoVisible(!addTodoVisible);
-  }
+  };
 
   useEffect(() => {
     let firebase = new Fire((error, user) => {
@@ -28,33 +35,33 @@ const HomeScreen = ({ props, route, navigation }) => {
         return Alert.alert("Uh oh, something went wrong!");
       }
 
-      firebase.getLists(theLists => {
+      firebase.getLists((theLists) => {
         setLists(theLists);
         setLoading(false);
-      })
+      });
     });
 
     return () => {
       firebase.detach();
-    }
+    };
   }, []);
 
-  const renderList = list => {
-    return <TodoList list={list} updateList={updateList} />
+  const renderList = (list) => {
+    return <TodoList list={list} updateList={updateList} />;
   };
 
-  const addList = list => {
+  const addList = (list) => {
     let firebase = new Fire((error, user) => {
       firebase.addList({
         name: list.name,
         color: list.color,
-        todos: []
+        todos: [],
       });
     });
     // setLists([...lists, { ...list, id: lists.length + 1, todos: [] }])
   };
 
-  const updateList = list => {
+  const updateList = (list) => {
     let firebase = new Fire((error, user) => {
       firebase.updateList(list);
     });
@@ -63,7 +70,7 @@ const HomeScreen = ({ props, route, navigation }) => {
   const onDataUpdated = (data) => {
     //console.log(data);
     navigation.popToTop();
-  }
+  };
 
   if (loading) {
     return (
@@ -74,26 +81,31 @@ const HomeScreen = ({ props, route, navigation }) => {
   }
   return (
     <View style={styles.container}>
-      <StatusBar backgroundColor='#009387' barStyle="light-content" />
+      <StatusBar backgroundColor="#009387" barStyle="light-content" />
       <Modal
-        animationType='slide'
+        animationType="slide"
         visible={addTodoVisible}
         onRequestClose={() => toggleAddModal()}
       >
         <AddListModal closeModal={() => toggleAddModal()} addList={addList} />
       </Modal>
-      <View style={{ flexDirection: 'row' }}>
+      <View style={{ flexDirection: "row" }}>
         <View style={styles.divider} />
         <Text style={[styles.title, { color: colors.text }]}>
           Workout
-          <Text style={{ fontWeight: '300', color: colors.text }}> Programs</Text>
+          <Text style={{ fontWeight: "300", color: colors.text }}>
+            {" "}
+            Programs
+          </Text>
         </Text>
         <View style={styles.divider} />
       </View>
       <View style={{ marginVertical: 48 }}>
-        <TouchableOpacity style={styles.addList} onPress={() => toggleAddModal()}>
+        <TouchableOpacity
+          style={styles.addList}
+          onPress={() => toggleAddModal()}
+        >
           <AntDesign name="plus" size={16} color={colors.text} />
-
         </TouchableOpacity>
         <Text style={styles.add}>Add New Program</Text>
       </View>
@@ -101,7 +113,7 @@ const HomeScreen = ({ props, route, navigation }) => {
       <View style={{ height: 275, paddingLeft: 32 }}>
         <FlatList
           data={lists}
-          keyExtractor={item => item.id.toString()}
+          keyExtractor={(item) => item.id.toString()}
           horizontal={true}
           showsHorizontalScrollIndicator={false}
           renderItem={({ item }) => renderList(item)}
@@ -117,35 +129,35 @@ export default HomeScreen;
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    alignItems: 'center',
-    justifyContent: 'center'
+    alignItems: "center",
+    justifyContent: "center",
   },
   divider: {
     backgroundColor: todoColors.lightBlue,
     height: 1,
     flex: 1,
-    alignSelf: 'center'
+    alignSelf: "center",
   },
   title: {
     fontSize: 38,
     fontWeight: "800",
     //color: colors.text,
-    paddingHorizontal: 64
+    paddingHorizontal: 64,
   },
   addList: {
     borderWidth: 2,
     borderColor: todoColors.lightBlue,
     borderRadius: 4,
     padding: 16,
-    alignItems: 'center',
-    justifyContent: 'center'
+    alignItems: "center",
+    justifyContent: "center",
   },
   add: {
     color: todoColors.blue,
-    fontWeight: '600',
+    fontWeight: "600",
     fontSize: 14,
-    marginTop: 8
-  }
+    marginTop: 8,
+  },
 });
 
 /*}
