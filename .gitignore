@@ -4,10 +4,12 @@ __generated__
 web-build
 
 # macOS
-.DS_Store
+/.DS_Store
 
 # Node
-node_modules
+/node_modules/
+/api/
+.expo/
 npm-debug.log
 yarn-error.log
 
@@ -115,6 +117,7 @@ shellAppWorkspaces
 /client-builds
 
 # Expo web env
+/.env
 .env.local
 .env.development.local
 .env.test.local
