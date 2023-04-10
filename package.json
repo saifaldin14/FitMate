@@ -29,7 +29,7 @@
     "formik": "^2.1.4",
     "haversine": "^1.1.1",
     "import": "0.0.6",
-    "jpeg-js": "^0.4.1",
+    "jpeg-js": "^0.4.4",
     "lodash": "^4.17.21",
     "moment": "^2.29.4",
     "native-base": "^2.13.14",
